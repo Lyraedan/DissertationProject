@@ -6,10 +6,10 @@ public class MeshGenerator : MonoBehaviour
 {
     public int resolution = 16;
 
-    [HideInInspector] public List<Vector3> vertices = new List<Vector3>();
-    [HideInInspector] public List<int> tris = new List<int>();
-    [HideInInspector] public List<Vector3> normals = new List<Vector3>();
-    [HideInInspector] public List<Vector2> uvs = new List<Vector2>();
+    public List<Vector3> vertices = new List<Vector3>();
+    public List<int> tris = new List<int>();
+    public List<Vector3> normals = new List<Vector3>();
+    public List<Vector2> uvs = new List<Vector2>();
 
     private Mesh mesh;
     private MeshRenderer meshRenderer;
@@ -27,6 +27,12 @@ public class MeshGenerator : MonoBehaviour
         GeneratePlane();
     }
 
+    private void OnValidate()
+    {
+        if(mesh != null)
+            Refresh();
+    }
+
     public void GeneratePlane()
     {
         int index = 0;
@@ -34,12 +40,16 @@ public class MeshGenerator : MonoBehaviour
         {
             for (int x = 0; x < resolution; x++)
             {
-
                 // Generate vertices
-                vertices.Add(new Vector3(x, 0, z));
-                vertices.Add(new Vector3(x + 1, 0, z));
-                vertices.Add(new Vector3(x, 0, z + 1));
-                vertices.Add(new Vector3(x + 1, 0, z + 1));
+                Vector3 topLeft = new Vector3(x, 0, z);
+                Vector3 topRight = new Vector3(x + 1, 0, z);
+                Vector3 bottomLeft = new Vector3(x, 0, z + 1);
+                Vector3 bottomRight = new Vector3(x + 1, 0, z + 1);
+
+                vertices.Add(topLeft);
+                vertices.Add(topRight);
+                vertices.Add(bottomLeft);
+                vertices.Add(bottomRight);
 
                 // Generate triangles
                 tris.Add(index);
@@ -51,10 +61,13 @@ public class MeshGenerator : MonoBehaviour
                 tris.Add(index + 3);
 
                 // Generate normals
-                normals.Add(-Vector3.forward);
-                normals.Add(-Vector3.forward);
-                normals.Add(-Vector3.forward);
-                normals.Add(-Vector3.forward);
+                Vector3 normalA = CalculateNormal(topLeft, bottomLeft, bottomRight);
+                Vector3 normalB = CalculateNormal(topLeft, bottomRight, topRight);
+
+                normals.Add(normalA);
+                normals.Add(normalA);
+                normals.Add(normalA);
+                normals.Add(normalB);
 
                 // Generate UVs
                 uvs.Add(new Vector2(0, 0));
@@ -72,6 +85,27 @@ public class MeshGenerator : MonoBehaviour
         mesh.uv = uvs.ToArray();
 
         meshFilter.mesh = mesh;
+    }
+
+    public void Refresh()
+    {
+        mesh.vertices = vertices.ToArray();
+        mesh.triangles = tris.ToArray();
+        mesh.normals = normals.ToArray();
+        mesh.uv = uvs.ToArray();
+
+        meshFilter.mesh = mesh;
+    }
+
+    public Vector3 CalculateNormal(Vector3 p1, Vector3 p2, Vector3 p3)
+    {
+        Vector3 a = new Vector3(p2.x - p1.x, p2.y - p1.y, p2.z - p1.z);
+        Vector3 b = new Vector3(p3.x - p1.x, p3.y - p1.y, p3.z - p1.z);
+
+        Vector3 normal = new Vector3(a.y * b.z - a.z * b.y,
+                                     a.z * b.x - a.x * b.z,
+                                     a.x * b.y - a.y * b.x);
+        return normal.normalized;
     }
 
 }
