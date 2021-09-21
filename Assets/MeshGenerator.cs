@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MeshGenerator : MonoBehaviour
 {
-    public int resolution = 16;
+    public int resolution = 10;
 
     public List<Vector3> vertices = new List<Vector3>();
     public List<int> tris = new List<int>();
@@ -24,7 +24,7 @@ public class MeshGenerator : MonoBehaviour
 
         mesh = new Mesh();
 
-        GeneratePlane();
+        GeneratePlane(0, 0);
     }
 
     private void OnValidate()
@@ -33,7 +33,7 @@ public class MeshGenerator : MonoBehaviour
             Refresh();
     }
 
-    public void GeneratePlane()
+    public void GeneratePlane(float xOff, float zOff)
     {
         int index = 0;
         for (int z = 0; z < resolution; z++)
@@ -41,10 +41,10 @@ public class MeshGenerator : MonoBehaviour
             for (int x = 0; x < resolution; x++)
             {
                 // Generate vertices
-                Vector3 topLeft = new Vector3(x, 0, z);
-                Vector3 topRight = new Vector3(x + 1, 0, z);
-                Vector3 bottomLeft = new Vector3(x, 0, z + 1);
-                Vector3 bottomRight = new Vector3(x + 1, 0, z + 1);
+                Vector3 topLeft = new Vector3(xOff + x, 0, zOff + z);
+                Vector3 topRight = new Vector3((xOff + x) + 1, 0, (zOff + z));
+                Vector3 bottomLeft = new Vector3((xOff + x), 0, (zOff + z) + 1);
+                Vector3 bottomRight = new Vector3((xOff + x) + 1, 0, (zOff + z) + 1);
 
                 vertices.Add(topLeft);
                 vertices.Add(topRight);

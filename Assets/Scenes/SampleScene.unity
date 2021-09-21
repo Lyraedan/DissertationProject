@@ -339,7 +339,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2b4d1bcd7d880b4d907c98fdc6d72a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  resolution: 16
+  resolution: 10
   vertices: []
   tris: 
   normals: []
