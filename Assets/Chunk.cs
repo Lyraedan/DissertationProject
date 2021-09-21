@@ -52,11 +52,28 @@ public class Chunk : MonoBehaviour
                 int pixelIndex = (int)z * MeshGenerator.resolution + (int)x;
                 pixels[pixelIndex] = new Color(noise, noise, noise);
                 Debug.Log("Noise: " + noise + " @ index: " + pixelIndex);
-                generator.UpdateVerticeY(pixelIndex, noise);
+                //generator.UpdateVerticeY(pixelIndex, noise);
             }
         }
 
-        noiseTexture.SetPixels(pixels);
+        for (int z = 0; z < (4 * MeshGenerator.resolution) - 3; z++)
+        {
+            for (int x = 0; x < (4 * MeshGenerator.resolution) - 3; x++)
+            {
+                float noise = CalculateHeight(x, z);
+                float noise2 = CalculateHeight(x + 1, z);
+                float noise3 = CalculateHeight(x, z + 1);
+                float noise4 = CalculateHeight(x + 1, z + 1);
+
+                int pixelIndex = (int)z * MeshGenerator.resolution + (int)x;
+                generator.UpdateVerticeY(pixelIndex, noise);
+                generator.UpdateVerticeY(pixelIndex + 1, noise2);
+                generator.UpdateVerticeY(pixelIndex + 2, noise3);
+                generator.UpdateVerticeY(pixelIndex + 3, noise4);
+            }
+        }
+
+                noiseTexture.SetPixels(pixels);
         noiseTexture.Apply();
     }
 
