@@ -42,24 +42,17 @@ public class Chunk : MonoBehaviour
 
     public void ApplyNoise(int layers)
     {
-        float offset = 5000f;
-        float s = scale.Evaluate(1f);
-        Debug.Log("Noise scaling to " + s);
         // increasing above resolution causes chunks to constantly generate
         for (int z = 0; z < resolution; z++)
         {
             for(int x = 0; x < resolution; x++)
             {
-                Debug.Log("x: " + x + ", z:" + z);
-                float noiseX = (offset + transform.position.x + x) / MeshGenerator.resolution * s;
-                float noiseZ = (offset + transform.position.z + z) / MeshGenerator.resolution * s;
-
-                float sample = Mathf.PerlinNoise(noiseX, noiseZ);
+                float noise = CalculateHeight(x, z);
 
                 int pixelIndex = (int)z * MeshGenerator.resolution + (int)x;
-                pixels[pixelIndex] = new Color(sample, sample, sample);
-                Debug.Log("Noise: " + sample);
-                generator.UpdateVerticeY(pixelIndex, sample);
+                pixels[pixelIndex] = new Color(noise, noise, noise);
+                Debug.Log("Noise: " + noise);
+                generator.UpdateVerticeY(pixelIndex, noise);
             }
         }
 
@@ -74,6 +67,19 @@ public class Chunk : MonoBehaviour
 
     public void ApplyFoliage()
     {
+
+    }
+
+    float CalculateHeight(float x, float z)
+    {
+        float offset = 5000f;
+        float s = scale.Evaluate(1f);
+        float noiseX = (offset + transform.position.x + x) / MeshGenerator.resolution * s;
+        float noiseZ = (offset + transform.position.z + z) / MeshGenerator.resolution * s;
+        float sample = Mathf.PerlinNoise(noiseX, noiseZ);
+
+        float frequancy = sample * 8;
+        return sample;
 
     }
 }
