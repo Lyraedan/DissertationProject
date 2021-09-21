@@ -42,7 +42,7 @@ public class Chunk : MonoBehaviour
 
     public void ApplyNoise(int layers)
     {
-        float offset = 0f;
+        float offset = 5000f;
         float s = scale.Evaluate(1f);
         Debug.Log("Noise scaling to " + s);
         // increasing above resolution causes chunks to constantly generate
