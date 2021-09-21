@@ -15,7 +15,13 @@ public class MeshGenerator : MonoBehaviour
     private MeshRenderer meshRenderer;
     private MeshFilter meshFilter;
 
-    public void Start()
+    private bool generated = false;
+
+    [Header("Editor")]
+    [SerializeField] private bool showGrid = false;
+    [SerializeField] private bool showVerticeValues = false;
+
+    public void Initialize()
     {
         meshRenderer = gameObject.AddComponent<MeshRenderer>();
         meshRenderer.sharedMaterial = new Material(Shader.Find("Standard"));
@@ -23,16 +29,11 @@ public class MeshGenerator : MonoBehaviour
         meshFilter = gameObject.AddComponent<MeshFilter>();
 
         mesh = new Mesh();
-
-        GeneratePlane(0, 0);
-
-        UpdateVerticeY(0, 0, 10);
-        Refresh();
     }
 
     private void OnValidate()
     {
-        if(mesh != null)
+        if(generated)
             Refresh();
     }
 
@@ -88,6 +89,7 @@ public class MeshGenerator : MonoBehaviour
         mesh.uv = uvs.ToArray();
 
         meshFilter.mesh = mesh;
+        generated = true;
     }
 
     public void Refresh()
@@ -111,11 +113,71 @@ public class MeshGenerator : MonoBehaviour
         return normal.normalized;
     }
 
+    /// <summary>
+    /// Recalculate the normal at tile x
+    /// </summary>
+    /// <param name="tile">The tile index (Is multiplied by 4)</param>
+    public void RecalculateNormalAt(int tile)
+    {
+        int index = tile * 4;
+
+        Vector3 topLeft = vertices[index];
+        Vector3 topRight = vertices[index + 1];
+        Vector3 bottomLeft = vertices[index + 2];
+        Vector3 bottomRight = vertices[index + 3];
+
+        Vector3 normalA = CalculateNormal(topLeft, bottomLeft, bottomRight);
+        Vector3 normalB = CalculateNormal(topLeft, bottomRight, topRight);
+
+        normals[index] = normalA;
+        normals[index + 1] = normalA;
+        normals[index + 2] = normalA;
+        normals[index + 3] = normalB;
+    }
+
     public void UpdateVerticeY(int x, int z, float value)
     {
-        int index = x + z * resolution;
+        int index = (x + z) * resolution;
         Vector3 vert = vertices[index];
         vert.y = value;
         vertices[index] = vert;
+    }
+
+    public void UpdateVerticeY(int index, float value)
+    {
+        Vector3 vert = vertices[index];
+        vert.y = value;
+        vertices[index] = vert;
+    }
+
+    public float GetAverage(int tile)
+    {
+        var index = tile * 4;
+        float p1 = vertices[index].y;
+        float p2 = vertices[index + 1].y;
+        float p3 = vertices[index + 2].y;
+        float p4 = vertices[index + 3].y;
+        return p1 + p2 + p3 + p4 / 4;
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (Application.isEditor)
+        {
+            if (generated)
+            {
+                for (int i = 0; i < vertices.Count - 1; i++)
+                {
+                    if(showVerticeValues)
+                        UnityEditor.Handles.Label(vertices[i], "(" + vertices[i].x + ", " + vertices[i].z + " : " + i + ")\nHeight: " + (GetAverage(i / 4)));
+
+                    if (showGrid)
+                    {
+                        Gizmos.color = Color.black;
+                        Gizmos.DrawLine(vertices[i], vertices[i + 1]);
+                    }
+                }
+            }
+        }
     }
 }
