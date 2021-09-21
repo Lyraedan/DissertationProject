@@ -136,9 +136,8 @@ public class MeshGenerator : MonoBehaviour
         normals[index + 3] = normalB;
     }
 
-    public void UpdateVerticeY(int x, int z, float value)
+    public void UpdateVerticeY(int index, float value)
     {
-        int index = (x + z) * resolution;
         Vector3 vert = vertices[index];
         vert.y = value;
         vertices[index] = vert;

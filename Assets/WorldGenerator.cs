@@ -1,10 +1,11 @@
 ﻿using System.Collections;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class WorldGenerator : MonoBehaviour
 {
-    public float viewSize = 0.1f;
+    public float viewSize = 1f;
     public GameObject chunkPrefab;
     public Camera cam;
 
@@ -13,27 +14,45 @@ public class WorldGenerator : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        /*
         for(int x = 0; x < 3; x++)
         {
             for(int z = 0; z < 3; z++)
             {
                 if (!ChunkExistsAt(x, z))
                 {
-                    SpawnChunk(x * MeshGenerator.resolution, z * MeshGenerator.resolution);
+                    SpawnChunk(x * MeshGenerator.resolution / 2, z * MeshGenerator.resolution / 2);
                 }
             }
         }
-        //GenerateChunkIfWeNeedTo();
+        */
+        GenerateChunkIfWeNeedTo();
     }
 
     private void Update()
     {
-        //GenerateChunkIfWeNeedTo();
+        // Unrender chunks that are far away from the camera
+        /*
+        float camX = cam.transform.position.x / (MeshGenerator.tileSize * MeshGenerator.resolution);
+        float camY = cam.transform.position.y / (MeshGenerator.tileSize * MeshGenerator.resolution);
+        float camZ = cam.transform.position.z / (MeshGenerator.tileSize * MeshGenerator.resolution);
+
+        for (int i = 0; i < chunks.Count; i++)
+        {
+            bool doEnable = MathUtils.DistanceFrom(chunks.Values.ElementAt(i).transform.position, new Vector3(camX, camY, camZ)) < (3 * MeshGenerator.resolution);
+            chunks.Values.ElementAt(i).SetActive(doEnable);
+        }
+        */
+        GenerateChunkIfWeNeedTo();
     }
 
     void SpawnChunk(float x, float z)
     {
+        if (ChunkExistsAt(x, z))
+            return;
+
         GameObject spawned = Instantiate(chunkPrefab, new Vector3(x, 0, z), Quaternion.identity);
+        spawned.transform.SetParent(transform);
         Chunk chunk = spawned.GetComponent<Chunk>();
         chunk.Initialize();
         chunk.GenerateChunk();
@@ -51,7 +70,7 @@ public class WorldGenerator : MonoBehaviour
             {
                 if(!ChunkExistsAt(x, z))
                 {
-                    SpawnChunk(x * MeshGenerator.resolution, z * MeshGenerator.resolution);
+                    SpawnChunk(x * MeshGenerator.resolution / 2, z * MeshGenerator.resolution / 2);
                 }
             }
         }
@@ -64,12 +83,12 @@ public class WorldGenerator : MonoBehaviour
 
     float ChunkX()
     {
-        return Mathf.Round(cam.transform.position.x / (MeshGenerator.tileSize * MeshGenerator.resolution));
+        return Mathf.Round(cam.transform.position.x / MeshGenerator.resolution);
     }
 
     float ChunkZ()
     {
-        return Mathf.Round(cam.transform.position.z / (MeshGenerator.tileSize * MeshGenerator.resolution));
+        return Mathf.Round(cam.transform.position.z / MeshGenerator.resolution);
     }
 
 }
