@@ -25,6 +25,9 @@ public class MeshGenerator : MonoBehaviour
         mesh = new Mesh();
 
         GeneratePlane(0, 0);
+
+        UpdateVerticeY(0, 0, 10);
+        Refresh();
     }
 
     private void OnValidate()
@@ -111,8 +114,8 @@ public class MeshGenerator : MonoBehaviour
     public void UpdateVerticeY(int x, int z, float value)
     {
         int index = x + z * resolution;
-        float vertX = vertices[index].x;
-        float vertZ = vertices[index].z;
-        vertices[index].Set(vertX, value, vertZ);
+        Vector3 vert = vertices[index];
+        vert.y = value;
+        vertices[index] = vert;
     }
 }
