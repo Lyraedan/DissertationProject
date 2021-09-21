@@ -26,7 +26,8 @@ public class WorldGenerator : MonoBehaviour
             }
         }
         */
-        GenerateChunkIfWeNeedTo();
+        SpawnChunk(0, 0);
+        //GenerateChunkIfWeNeedTo();
     }
 
     private void Update()
@@ -43,7 +44,7 @@ public class WorldGenerator : MonoBehaviour
             chunks.Values.ElementAt(i).SetActive(doEnable);
         }
         */
-        GenerateChunkIfWeNeedTo();
+        //GenerateChunkIfWeNeedTo();
     }
 
     void SpawnChunk(float x, float z)

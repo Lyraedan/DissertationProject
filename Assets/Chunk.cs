@@ -51,7 +51,7 @@ public class Chunk : MonoBehaviour
 
                 int pixelIndex = (int)z * MeshGenerator.resolution + (int)x;
                 pixels[pixelIndex] = new Color(noise, noise, noise);
-                Debug.Log("Noise: " + noise);
+                Debug.Log("Noise: " + noise + " @ index: " + pixelIndex);
                 generator.UpdateVerticeY(pixelIndex, noise);
             }
         }
