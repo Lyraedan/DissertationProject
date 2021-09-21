@@ -14,18 +14,6 @@ public class WorldGenerator : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        /*
-        for(int x = 0; x < 3; x++)
-        {
-            for(int z = 0; z < 3; z++)
-            {
-                if (!ChunkExistsAt(x, z))
-                {
-                    SpawnChunk(x * MeshGenerator.resolution / 2, z * MeshGenerator.resolution / 2);
-                }
-            }
-        }
-        */
         SpawnChunk(0, 0);
         //GenerateChunkIfWeNeedTo();
     }

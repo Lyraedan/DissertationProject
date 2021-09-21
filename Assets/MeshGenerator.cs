@@ -136,11 +136,23 @@ public class MeshGenerator : MonoBehaviour
         normals[index + 3] = normalB;
     }
 
-    public void UpdateVerticeY(int index, float value)
+    public void UpdateHeights(int tile, float[] heights)
     {
-        Vector3 vert = vertices[index];
-        vert.y = value;
-        vertices[index] = vert;
+        int index = tile * 4;
+        Vector3 topLeft = vertices[index];
+        Vector3 topRight = vertices[index + 1];
+        Vector3 bottomLeft = vertices[index + 2];
+        Vector3 bottomRight = vertices[index + 3];
+
+        topLeft.y = heights[0];
+        topRight.y = heights[1];
+        bottomLeft.y = heights[2];
+        bottomRight.y = heights[3];
+
+        vertices[index] = topLeft;
+        vertices[index + 1] = topRight;
+        vertices[index + 2] = bottomLeft;
+        vertices[index + 3] = bottomRight;
     }
 
     public float GetAverage(int tile)

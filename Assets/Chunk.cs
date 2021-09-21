@@ -48,13 +48,17 @@ public class Chunk : MonoBehaviour
             for(int x = 0; x < resolution; x++)
             {
                 float noise = CalculateHeight(x, z);
+                float noise2 = CalculateHeight(x + 1, z);
+                float noise3 = CalculateHeight(x, z + 1);
+                float noise4 = CalculateHeight(x + 1, z + 1);
 
                 int pixelIndex = (int)z * MeshGenerator.resolution + (int)x;
                 pixels[pixelIndex] = new Color(noise, noise, noise);
-                Debug.Log("Noise: " + noise + " @ index: " + pixelIndex);
+                generator.UpdateHeights(pixelIndex, new float[] { noise, noise2, noise3, noise4 });
             }
         }
 
+        /*
         // Apply the heightmap to the vertices
         for (int z = 0; z < (4 * MeshGenerator.resolution) - 3; z++)
         {
@@ -72,6 +76,7 @@ public class Chunk : MonoBehaviour
                 generator.UpdateVerticeY(pixelIndex + 3, noise4);
             }
         }
+        */
 
         noiseTexture.SetPixels(pixels);
         noiseTexture.Apply();
@@ -89,14 +94,14 @@ public class Chunk : MonoBehaviour
 
     float CalculateHeight(float x, float z)
     {
-        float offset = 5000f;
-        float s = scale.Evaluate(1f);
-        float noiseX = (offset + transform.position.x + x) / MeshGenerator.resolution * s;
-        float noiseZ = (offset + transform.position.z + z) / MeshGenerator.resolution * s;
-        float sample = Mathf.PerlinNoise(noiseX, noiseZ);
+        float heightMul = 1.0f;
+        float mul = scale.Evaluate(1f);
+        float noiseX = ((transform.position.x + x) / MeshGenerator.resolution) * mul;
+        float noiseZ = ((transform.position.z + z) / MeshGenerator.resolution) * mul;
+        float sample = Mathf.PerlinNoise(noiseX, noiseZ) * heightMul;
 
-        float frequancy = sample * 8;
-        return sample;
+        float noise = sample;
+        return noise;
 
     }
 }
