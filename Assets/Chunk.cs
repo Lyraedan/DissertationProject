@@ -42,7 +42,7 @@ public class Chunk : MonoBehaviour
 
     public void ApplyNoise(int layers)
     {
-        // increasing above resolution causes chunks to constantly generate
+        // Generate the highmap in the inspector
         for (int z = 0; z < resolution; z++)
         {
             for(int x = 0; x < resolution; x++)
@@ -52,10 +52,10 @@ public class Chunk : MonoBehaviour
                 int pixelIndex = (int)z * MeshGenerator.resolution + (int)x;
                 pixels[pixelIndex] = new Color(noise, noise, noise);
                 Debug.Log("Noise: " + noise + " @ index: " + pixelIndex);
-                //generator.UpdateVerticeY(pixelIndex, noise);
             }
         }
 
+        // Apply the heightmap to the vertices
         for (int z = 0; z < (4 * MeshGenerator.resolution) - 3; z++)
         {
             for (int x = 0; x < (4 * MeshGenerator.resolution) - 3; x++)
@@ -73,7 +73,7 @@ public class Chunk : MonoBehaviour
             }
         }
 
-                noiseTexture.SetPixels(pixels);
+        noiseTexture.SetPixels(pixels);
         noiseTexture.Apply();
     }
 
