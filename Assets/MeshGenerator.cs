@@ -47,8 +47,8 @@ public class MeshGenerator : MonoBehaviour
             {
                 // Generate vertices
                 Vector3 topLeft = new Vector3(xOff + x, 0, zOff + z);
-                Vector3 topRight = new Vector3((xOff + x) + tileSize, 0, (zOff + z));
-                Vector3 bottomLeft = new Vector3((xOff + x), 0, (zOff + z) + tileSize);
+                Vector3 topRight = new Vector3((xOff + x) + tileSize, 0, zOff + z);
+                Vector3 bottomLeft = new Vector3(xOff + x, 0, (zOff + z) + tileSize);
                 Vector3 bottomRight = new Vector3((xOff + x) + tileSize, 0, (zOff + z) + tileSize);
 
                 vertices.Add(topLeft);

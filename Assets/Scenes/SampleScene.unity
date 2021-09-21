@@ -325,8 +325,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af514f12f8833d748a444081cbdbce39, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  viewSize: 3
   chunkPrefab: {fileID: 3805699330748211317, guid: a573e7a2ede0b5942932753c100a4763,
     type: 3}
+  cam: {fileID: 963194227}
 --- !u!4 &2011233288
 Transform:
   m_ObjectHideFlags: 0
