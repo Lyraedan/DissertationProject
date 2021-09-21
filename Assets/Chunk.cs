@@ -7,11 +7,10 @@ public class Chunk : MonoBehaviour
 {
 
     private MeshGenerator generator;
-    public Vector3 chunkPosition = Vector3.zero;
 
     public int resolution {
         get {
-            return generator.resolution;
+            return MeshGenerator.resolution;
         }
     }
 
@@ -21,14 +20,13 @@ public class Chunk : MonoBehaviour
         generator.Initialize();
     }
 
-    public void GenerateChunkAt(Vector3 position)
+    public void GenerateChunk()
     {
-        this.chunkPosition = position;
-        generator.GeneratePlane(position.x, position.z);
+        generator.GeneratePlane(transform.position.x, transform.position.z);
         ApplyNoise(1);
         Erode();
         ApplyFoliage();
-        for(int i = 0; i < generator.resolution * generator.resolution; i++)
+        for(int i = 0; i < resolution * resolution; i++)
         {
             generator.RecalculateNormalAt(i);
         }
@@ -38,12 +36,12 @@ public class Chunk : MonoBehaviour
     void ApplyNoise(int layers)
     {
         float offset = 0f;
-        for(int z = 0; z < generator.resolution; z++)
+        for(int z = 0; z < resolution; z++)
         {
-            for(int x = 0; x < generator.resolution; x++)
+            for(int x = 0; x < resolution; x++)
             {
-                float noiseX = (offset + chunkPosition.x + x) / generator.resolution;
-                float noiseZ = (offset + chunkPosition.z + z) / generator.resolution;
+                float noiseX = (offset + transform.position.x + x) / resolution;
+                float noiseZ = (offset + transform.position.z + z) / resolution;
 
                 float noise = 0;
                 float amplitude = 0.1f;

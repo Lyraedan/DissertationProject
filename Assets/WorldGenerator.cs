@@ -9,9 +9,9 @@ public class WorldGenerator : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        for(int x = 0; x < 300; x++)
+        for(int x = 0; x < 3; x++)
         {
-            for(int z = 0; z < 300; z++)
+            for(int z = 0; z < 3; z++)
             {
                 SpawnChunk(x, z);
             }
@@ -20,10 +20,10 @@ public class WorldGenerator : MonoBehaviour
 
     void SpawnChunk(float x, float z)
     {
-        GameObject spawned = Instantiate(chunkPrefab, new Vector3(x, 0f, z), Quaternion.identity);
+        GameObject spawned = Instantiate(chunkPrefab, new Vector3(x * MeshGenerator.resolution / 2, 0, z * MeshGenerator.resolution / 2), Quaternion.identity);
         Chunk chunk = spawned.GetComponent<Chunk>();
         chunk.Initialize();
-        chunk.GenerateChunkAt(new Vector3(x * chunk.resolution, 0f, z * chunk.resolution));
+        chunk.GenerateChunk();
     }
 
 }

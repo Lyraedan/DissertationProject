@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class MeshGenerator : MonoBehaviour
 {
-    public int resolution = 10;
+    public static int resolution = 10;
+    public static float tileSize = 1.0f;
 
     public List<Vector3> vertices = new List<Vector3>();
     public List<int> tris = new List<int>();
@@ -46,9 +47,9 @@ public class MeshGenerator : MonoBehaviour
             {
                 // Generate vertices
                 Vector3 topLeft = new Vector3(xOff + x, 0, zOff + z);
-                Vector3 topRight = new Vector3((xOff + x) + 1, 0, (zOff + z));
-                Vector3 bottomLeft = new Vector3((xOff + x), 0, (zOff + z) + 1);
-                Vector3 bottomRight = new Vector3((xOff + x) + 1, 0, (zOff + z) + 1);
+                Vector3 topRight = new Vector3((xOff + x) + tileSize, 0, (zOff + z));
+                Vector3 bottomLeft = new Vector3((xOff + x), 0, (zOff + z) + tileSize);
+                Vector3 bottomRight = new Vector3((xOff + x) + tileSize, 0, (zOff + z) + tileSize);
 
                 vertices.Add(topLeft);
                 vertices.Add(topRight);
@@ -138,13 +139,6 @@ public class MeshGenerator : MonoBehaviour
     public void UpdateVerticeY(int x, int z, float value)
     {
         int index = (x + z) * resolution;
-        Vector3 vert = vertices[index];
-        vert.y = value;
-        vertices[index] = vert;
-    }
-
-    public void UpdateVerticeY(int index, float value)
-    {
         Vector3 vert = vertices[index];
         vert.y = value;
         vertices[index] = vert;
