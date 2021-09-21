@@ -108,4 +108,11 @@ public class MeshGenerator : MonoBehaviour
         return normal.normalized;
     }
 
+    public void UpdateVerticeY(int x, int z, float value)
+    {
+        int index = x + z * resolution;
+        float vertX = vertices[index].x;
+        float vertZ = vertices[index].z;
+        vertices[index].Set(vertX, value, vertZ);
+    }
 }
