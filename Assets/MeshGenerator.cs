@@ -10,13 +10,15 @@ public class MeshGenerator : MonoBehaviour
     public static int resolution = 100;
     public static float tileSize = 1.0f;
 
+    public ColorSettings colorSettings;
+
     public List<Vector3> vertices = new List<Vector3>();
     public List<int> tris = new List<int>();
     public List<Vector3> normals = new List<Vector3>();
     public List<Vector2> uvs = new List<Vector2>();
 
     private Mesh mesh;
-    private MeshRenderer meshRenderer;
+    [HideInInspector] public MeshRenderer meshRenderer;
     private MeshFilter meshFilter;
     private MeshCollider meshCollider;
 
@@ -28,8 +30,9 @@ public class MeshGenerator : MonoBehaviour
 
     public void Initialize()
     {
+        colorSettings = gameObject.GetComponent<ColorSettings>();
         meshRenderer = gameObject.AddComponent<MeshRenderer>();
-        meshRenderer.sharedMaterial = new Material(Shader.Find("Standard"));
+        meshRenderer.sharedMaterial = colorSettings.material;
 
         meshFilter = gameObject.AddComponent<MeshFilter>();
         meshCollider = gameObject.AddComponent<MeshCollider>();

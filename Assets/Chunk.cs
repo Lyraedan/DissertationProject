@@ -11,6 +11,7 @@ public class Chunk : MonoBehaviour
 
     public Texture2D noiseTexture;
     private Color[] pixels;
+    private MinMax minMax;
 
     public int resolution {
         get {
@@ -20,6 +21,7 @@ public class Chunk : MonoBehaviour
 
     public void Initialize()
     {
+        minMax = new MinMax();
         generator = GetComponent<MeshGenerator>();
         generator.Initialize();
 
@@ -66,12 +68,15 @@ public class Chunk : MonoBehaviour
 
                 int pixelIndex = (int)z * MeshGenerator.resolution + (int)x;
                 pixels[pixelIndex] = new Color(noise, noise2, noise3, noise4);
+                //generator.colorSettings.material.SetVector("_heights", new Vector4(noise, noise2, noise3, noise4));
                 generator.UpdateHeights(pixelIndex, new float[] { noise, noise2, noise3, noise4 });
             }
         }
 
         noiseTexture.SetPixels(pixels);
         noiseTexture.Apply();
+        generator.meshRenderer.material.SetTexture("_MainTex", noiseTexture);
+        //generator.colorSettings.material.SetTexture("_heightmap", noiseTexture);
     }
 
     public void Erode()
@@ -114,6 +119,7 @@ public class Chunk : MonoBehaviour
                 sample *= noiseSettings[i].strength;
             }
         }
+        minMax.AddValue(sample);
         return sample;
     }
 }
