@@ -65,6 +65,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _texture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Floats:
     - _AlphaClip: 0
     - _Blend: 0
@@ -94,4 +98,4 @@ Material:
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
     - _heightColor: {r: 0, g: 0, b: 0.020015717, a: 0.19857979}
     - _heights: {r: 0, g: 0, b: 0, a: 0}
-    - _minMax: {r: 0, g: 34.209427, b: 0, a: 0}
+    - _minMax: {r: 0, g: 34.223984, b: 0, a: 0}

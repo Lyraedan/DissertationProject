@@ -38,6 +38,11 @@ public class MeshGenerator : MonoBehaviour
         meshCollider = gameObject.AddComponent<MeshCollider>();
 
         mesh = new Mesh();
+
+        if(colorSettings.texture == null)
+        {
+            colorSettings.texture = new Texture2D(colorSettings.textureResolution, 1);
+        }
     }
 
     private void OnValidate()

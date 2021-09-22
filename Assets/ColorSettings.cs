@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class ColorSettings : MonoBehaviour
 {
-    public Color color;
+    public int textureResolution = 50;
+    public Texture2D texture;
     public Material material;
     public Gradient gradient;
 }

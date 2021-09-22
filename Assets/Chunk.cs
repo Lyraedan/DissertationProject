@@ -39,6 +39,7 @@ public class Chunk : MonoBehaviour
         {
             generator.RecalculateNormalAt(i);
         }
+        GenerateColours();
         generator.Refresh();
     }
 
@@ -51,6 +52,7 @@ public class Chunk : MonoBehaviour
         {
             generator.RecalculateNormalAt(i);
         }
+        GenerateColours();
         generator.Refresh();
     }
 
@@ -66,8 +68,10 @@ public class Chunk : MonoBehaviour
                 float noise3 = CalculateHeight(x, z + 1);
                 float noise4 = CalculateHeight(x + 1, z + 1);
 
+                float avg = noise + noise2 + noise3 + noise4 / 4;
+
                 int pixelIndex = (int)z * MeshGenerator.resolution + (int)x;
-                pixels[pixelIndex] = new Color(noise, noise2, noise3, noise4);
+                pixels[pixelIndex] = new Color(avg, avg, avg);
                 //generator.colorSettings.material.SetVector("_heights", new Vector4(noise, noise2, noise3, noise4));
                 generator.UpdateHeights(pixelIndex, new float[] { noise, noise2, noise3, noise4 });
             }
@@ -75,8 +79,6 @@ public class Chunk : MonoBehaviour
 
         noiseTexture.SetPixels(pixels);
         noiseTexture.Apply();
-        generator.meshRenderer.material.SetTexture("_MainTex", noiseTexture);
-        //generator.colorSettings.material.SetTexture("_heightmap", noiseTexture);
     }
 
     public void Erode()
@@ -95,21 +97,32 @@ public class Chunk : MonoBehaviour
         float offset = 5000.0f;
         float amplitude = 0;
         float sampleIncrement = 0;
-        for(int i = 0; i < noiseSettings.Length; i++)
+
+        float chunkX = transform.position.x * MeshGenerator.resolution;
+        float chunkZ = transform.position.z * MeshGenerator.resolution;
+
+        for (int i = 0; i < noiseSettings.Length; i++)
         {
             if (noiseSettings[i].enabled)
             {
                 for (int j = 0; j < noiseSettings[i].interations; j++)
                 {
-                    float noiseX = ((offset + transform.position.x + x) / MeshGenerator.resolution + sampleIncrement) * noiseSettings[i].roughness;
-                    float noiseZ = ((offset + transform.position.z + z) / MeshGenerator.resolution + sampleIncrement) * noiseSettings[i].roughness;
-                    switch(noiseSettings[i].type)
+                    float noiseX = ((offset + chunkX + x) * noiseSettings[i].roughness) / MeshGenerator.resolution;
+                    float noiseZ = ((offset + chunkZ + z) * noiseSettings[i].roughness) / MeshGenerator.resolution;
+                    switch(noiseSettings[i].noiseType)
                     {
-                        case NoiseSettings.NoiseType.Hilly:
+                        case NoiseSettings.NoiseType.Perlin:
                             sample += Mathf.PerlinNoise(noiseX, noiseZ) * noiseSettings[i].frequancy;
                             break;
-                        case NoiseSettings.NoiseType.Mountainous:
-                            sample += 1f - Mathf.Abs(Mathf.PerlinNoise(noiseX, noiseZ) * noiseSettings[i].frequancy);
+                        case NoiseSettings.NoiseType.Perlin_Abs:
+                            sample += 1f - Mathf.Abs(Mathf.Sin(Mathf.PerlinNoise(noiseX, noiseZ))) * noiseSettings[i].frequancy;
+                            break;
+                        case NoiseSettings.NoiseType.Simplex:
+                            sample += SimplexNoise.SimplexNoise.Generate(noiseX, noiseZ);
+                            break;
+                        default:
+                            // Default algorithm is perlin
+                            sample += Mathf.PerlinNoise(noiseX, noiseZ) * noiseSettings[i].frequancy;
                             break;
                     }
                     sampleIncrement += amplitude;
@@ -122,4 +135,28 @@ public class Chunk : MonoBehaviour
         minMax.AddValue(sample);
         return sample;
     }
+
+    public void GenerateColours()
+    {
+        UpdateMinMax();
+        UpdateColors();
+    }
+
+    void UpdateMinMax()
+    {
+        generator.colorSettings.material.SetVector("_minMax", new Vector4(minMax.Min, minMax.Max));
+    }
+
+    void UpdateColors()
+    {
+        Color[] colors = new Color[generator.colorSettings.textureResolution];
+        for (int i = 0; i < generator.colorSettings.textureResolution; i++) {
+            colors[i] = generator.colorSettings.gradient.Evaluate(i / (generator.colorSettings.textureResolution - 1f));
+        }
+        generator.colorSettings.texture.SetPixels(colors);
+        generator.colorSettings.texture.Apply();
+        generator.colorSettings.material.SetTexture("_texture", generator.colorSettings.texture);
+    }
+
+
 }

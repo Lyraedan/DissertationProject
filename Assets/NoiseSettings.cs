@@ -7,10 +7,10 @@ public class NoiseSettings
 {
     public enum NoiseType
     {
-        Hilly, Mountainous
+        Perlin, Perlin_Abs, Simplex, Fractal, Coherent, Diamond_Square
     }
 
-    public NoiseType type = NoiseType.Hilly;
+    public NoiseType noiseType = NoiseType.Perlin;
     public bool enabled = false;
     public uint interations = 1;
     public float strength = 1f;
