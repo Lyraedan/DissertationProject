@@ -7,10 +7,7 @@ public class Chunk : MonoBehaviour
 {
 
     public MeshGenerator generator;
-    public float perlinMultiplier = 1f;
-    public float heightMultiplier = 1f;
-    public float noiseLayers = 1;
-    public float amplitude = 0.5f;
+    public NoiseSettings[] noiseSettings = new NoiseSettings[1];
 
     public Texture2D noiseTexture;
     private Color[] pixels;
@@ -81,17 +78,22 @@ public class Chunk : MonoBehaviour
 
         float incrementRate = 0;
         float sampleIncrement = 0;
-        for(int i = 0; i < noiseLayers; i++)
+        for(int i = 0; i < noiseSettings.Length; i++)
         {
-            float noiseX = ((transform.position.x + x) / MeshGenerator.resolution + sampleIncrement) * perlinMultiplier;
-            float noiseZ = ((transform.position.z + z) / MeshGenerator.resolution + sampleIncrement) * perlinMultiplier;
-            sample += Mathf.PerlinNoise(noiseX, noiseZ) * heightMultiplier;
-            sampleIncrement += incrementRate;
-            incrementRate += amplitude;
+            if (noiseSettings[i].enabled)
+            {
+                for (int j = 0; j < noiseSettings[i].interations; j++)
+                {
+                    float noiseX = ((transform.position.x + x) / MeshGenerator.resolution + sampleIncrement) * noiseSettings[i].roughness;
+                    float noiseZ = ((transform.position.z + z) / MeshGenerator.resolution + sampleIncrement) * noiseSettings[i].roughness;
+                    sample += Mathf.PerlinNoise(noiseX, noiseZ) * noiseSettings[i].frequancy;
+                    sampleIncrement += incrementRate;
+                    incrementRate += noiseSettings[i].persistance;
+                }
+                sample = Mathf.Max(0, sample - noiseSettings[i].minValue);
+                sample *= noiseSettings[i].strength;
+            }
         }
-
-        float noise = sample;
-        return noise;
-
+        return sample;
     }
 }

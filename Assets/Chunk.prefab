@@ -45,10 +45,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   generator: {fileID: 0}
-  perlinMultiplier: 6
-  heightMultiplier: 8
-  noiseLayers: 1
-  amplitude: 0.5
+  noiseSettings:
+  - enabled: 1
+    interations: 1
+    strength: 3
+    roughness: 13
+    frequancy: 1
+    persistance: 0.2
+    minValue: 0.3
+  - enabled: 1
+    interations: 1
+    strength: 1
+    roughness: 6
+    frequancy: 3
+    persistance: 0.7
+    minValue: 0.5
+  - enabled: 1
+    interations: 1
+    strength: 1
+    roughness: 1
+    frequancy: 20
+    persistance: 0.7
+    minValue: 0.5
   noiseTexture: {fileID: 0}
 --- !u!114 &3805699330748211315
 MonoBehaviour:

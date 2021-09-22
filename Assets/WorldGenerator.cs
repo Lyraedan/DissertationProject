@@ -17,8 +17,8 @@ public class WorldGenerator : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //SpawnChunk(0, 0);
-        GenerateChunkIfWeNeedTo();
+        SpawnChunk(0, 0);
+        //GenerateChunkIfWeNeedTo();
     }
 
     private void Update()
@@ -35,7 +35,7 @@ public class WorldGenerator : MonoBehaviour
             chunks.Values.ElementAt(i).SetActive(doEnable);
         }
         */
-        GenerateChunkIfWeNeedTo();
+        //GenerateChunkIfWeNeedTo();
     }
 
     void SpawnChunk(float x, float z)

@@ -7,17 +7,11 @@ using UnityEngine;
 [CanEditMultipleObjects]
 public class ChunkEditor : Editor
 {
-    SerializedProperty perlinMultiplier;
-    SerializedProperty heightMultiplier;
-    SerializedProperty noiseLayers;
-    SerializedProperty amplitude;
+    SerializedProperty noiseSettings;
 
     private void OnEnable()
     {
-        perlinMultiplier = serializedObject.FindProperty("perlinMultiplier");
-        heightMultiplier = serializedObject.FindProperty("heightMultiplier");
-        noiseLayers = serializedObject.FindProperty("noiseLayers");
-        amplitude = serializedObject.FindProperty("amplitude");
+        noiseSettings = serializedObject.FindProperty("noiseSettings");
     }
 
     public override void OnInspectorGUI()
@@ -26,20 +20,21 @@ public class ChunkEditor : Editor
 
         Chunk chunk = (Chunk) target;
 
-        EditorGUILayout.PropertyField(perlinMultiplier);
-        EditorGUILayout.PropertyField(heightMultiplier);
-        EditorGUILayout.PropertyField(noiseLayers);
-        EditorGUILayout.PropertyField(amplitude);
-        GUILayout.Space(5);
         if (chunk.noiseTexture != null)
         {
             GUILayout.Space(5);
-            EditorGUI.LabelField(new Rect(25, 100, 100, 25), "Heightmap");
+            EditorGUI.LabelField(new Rect(25, 5, 100, 25), "Heightmap");
             GUILayout.Space(5);
-            EditorGUI.DrawPreviewTexture(new Rect(25, 125, 100, 100), chunk.noiseTexture);
-            GUILayout.Space(150);
+            EditorGUI.DrawPreviewTexture(new Rect(25, 30, 100, 100), chunk.noiseTexture);
+            GUILayout.Space(120);
         }
 
+        EditorGUI.BeginChangeCheck();
+        EditorGUILayout.PropertyField(noiseSettings);
+        if (EditorGUI.EndChangeCheck())
+        {
+            chunk.GenerateChunk();
+        }
         if (chunk.generator != null)
         {
 
