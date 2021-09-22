@@ -7,11 +7,13 @@ using UnityEngine;
 [CanEditMultipleObjects]
 public class ChunkEditor : Editor
 {
-    SerializedProperty scale;
+    SerializedProperty perlinMultiplier;
+    SerializedProperty heightMultiplier;
 
     private void OnEnable()
     {
-        scale = serializedObject.FindProperty("scale");
+        perlinMultiplier = serializedObject.FindProperty("perlinMultiplier");
+        heightMultiplier = serializedObject.FindProperty("heightMultiplier");
     }
 
     public override void OnInspectorGUI()
@@ -20,7 +22,8 @@ public class ChunkEditor : Editor
 
         Chunk chunk = (Chunk) target;
 
-        EditorGUILayout.PropertyField(scale);
+        EditorGUILayout.PropertyField(perlinMultiplier);
+        EditorGUILayout.PropertyField(heightMultiplier);
         GUILayout.Space(5);
         if (chunk.noiseTexture != null)
         {

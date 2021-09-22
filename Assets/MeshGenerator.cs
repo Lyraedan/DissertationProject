@@ -4,7 +4,10 @@ using UnityEngine;
 
 public class MeshGenerator : MonoBehaviour
 {
-    public static int resolution = 10;
+    /// <summary>
+    /// Ranges for best "fast" results (32 -> 100)
+    /// </summary>
+    public static int resolution = 64;
     public static float tileSize = 1.0f;
 
     public List<Vector3> vertices = new List<Vector3>();
@@ -15,6 +18,7 @@ public class MeshGenerator : MonoBehaviour
     private Mesh mesh;
     private MeshRenderer meshRenderer;
     private MeshFilter meshFilter;
+    private MeshCollider meshCollider;
 
     private bool generated = false;
 
@@ -28,6 +32,7 @@ public class MeshGenerator : MonoBehaviour
         meshRenderer.sharedMaterial = new Material(Shader.Find("Standard"));
 
         meshFilter = gameObject.AddComponent<MeshFilter>();
+        meshCollider = gameObject.AddComponent<MeshCollider>();
 
         mesh = new Mesh();
     }
@@ -79,7 +84,7 @@ public class MeshGenerator : MonoBehaviour
                 uvs.Add(new Vector2(1, 0));
                 uvs.Add(new Vector2(0, 1));
                 uvs.Add(new Vector2(1, 1));
-
+                
                 index += 4;
             }
         }
@@ -89,7 +94,12 @@ public class MeshGenerator : MonoBehaviour
         mesh.normals = normals.ToArray();
         mesh.uv = uvs.ToArray();
 
+        mesh.RecalculateBounds();
+        mesh.RecalculateNormals();
+        mesh.RecalculateTangents();
+
         meshFilter.mesh = mesh;
+        meshCollider.sharedMesh = mesh;
         generated = true;
     }
 
@@ -100,7 +110,13 @@ public class MeshGenerator : MonoBehaviour
         mesh.normals = normals.ToArray();
         mesh.uv = uvs.ToArray();
 
+        mesh.RecalculateBounds();
+        mesh.RecalculateNormals();
+        mesh.RecalculateTangents();
+
         meshFilter.mesh = mesh;
+        meshCollider.sharedMesh = mesh;
+
     }
 
     public Vector3 CalculateNormal(Vector3 p1, Vector3 p2, Vector3 p3)

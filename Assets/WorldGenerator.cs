@@ -11,11 +11,14 @@ public class WorldGenerator : MonoBehaviour
 
     public Dictionary<string, GameObject> chunks = new Dictionary<string, GameObject>();
 
+    [Header("Editor")]
+    public bool displayChunkDetails = false;
+
     // Start is called before the first frame update
     void Start()
     {
-        SpawnChunk(0, 0);
-        //GenerateChunkIfWeNeedTo();
+        //SpawnChunk(0, 0);
+        GenerateChunkIfWeNeedTo();
     }
 
     private void Update()
@@ -32,7 +35,7 @@ public class WorldGenerator : MonoBehaviour
             chunks.Values.ElementAt(i).SetActive(doEnable);
         }
         */
-        //GenerateChunkIfWeNeedTo();
+        GenerateChunkIfWeNeedTo();
     }
 
     void SpawnChunk(float x, float z)
@@ -42,6 +45,7 @@ public class WorldGenerator : MonoBehaviour
 
         GameObject spawned = Instantiate(chunkPrefab, new Vector3(x, 0, z), Quaternion.identity);
         spawned.transform.SetParent(transform);
+        spawned.name = $"{x}_{z}";
         Chunk chunk = spawned.GetComponent<Chunk>();
         chunk.Initialize();
         chunk.GenerateChunk();
@@ -80,4 +84,12 @@ public class WorldGenerator : MonoBehaviour
         return Mathf.Round(cam.transform.position.z / MeshGenerator.resolution);
     }
 
+    private void OnDrawGizmos()
+    {
+        for(int i = 0; i < chunks.Count; i++)
+        {
+            if (displayChunkDetails)
+                UnityEditor.Handles.Label(chunks.ElementAt(i).Value.transform.position, "(" + chunks.ElementAt(i).Value.transform.position.x + ", " + chunks.ElementAt(i).Value.transform.position.z + " : " + i + ")");
+        }
+    }
 }
