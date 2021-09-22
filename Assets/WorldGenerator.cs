@@ -8,6 +8,7 @@ public class WorldGenerator : MonoBehaviour
     public float viewSize = 1f;
     public GameObject chunkPrefab;
     public Camera cam;
+    public bool isInfinite = false;
 
     public Dictionary<string, GameObject> chunks = new Dictionary<string, GameObject>();
 
@@ -17,8 +18,10 @@ public class WorldGenerator : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        SpawnChunk(0, 0);
-        //GenerateChunkIfWeNeedTo();
+        if(!isInfinite)
+            SpawnChunk(0, 0);
+        else
+            GenerateChunkIfWeNeedTo();
     }
 
     private void Update()
@@ -35,7 +38,8 @@ public class WorldGenerator : MonoBehaviour
             chunks.Values.ElementAt(i).SetActive(doEnable);
         }
         */
-        //GenerateChunkIfWeNeedTo();
+        if(isInfinite)
+            GenerateChunkIfWeNeedTo();
     }
 
     void SpawnChunk(float x, float z)

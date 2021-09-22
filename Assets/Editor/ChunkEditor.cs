@@ -18,7 +18,7 @@ public class ChunkEditor : Editor
     {
         serializedObject.Update();
 
-        Chunk chunk = (Chunk) target;
+        Chunk chunk = (Chunk)target;
 
         if (chunk.noiseTexture != null)
         {
@@ -33,12 +33,12 @@ public class ChunkEditor : Editor
         EditorGUILayout.PropertyField(noiseSettings);
         if (EditorGUI.EndChangeCheck())
         {
-            chunk.UpdateChunk();
+            if (chunk.generator != null)
+            {
+                chunk.UpdateChunk();
+            }
         }
-        if (chunk.generator != null)
-        {
 
-        }
         serializedObject.ApplyModifiedProperties();
     }
 }

@@ -87,8 +87,8 @@ public class Chunk : MonoBehaviour
     float CalculateHeight(float x, float z)
     {
         float sample = 0;
-
-        float incrementRate = 0;
+        float offset = 5000.0f;
+        float amplitude = 0;
         float sampleIncrement = 0;
         for(int i = 0; i < noiseSettings.Length; i++)
         {
@@ -96,11 +96,19 @@ public class Chunk : MonoBehaviour
             {
                 for (int j = 0; j < noiseSettings[i].interations; j++)
                 {
-                    float noiseX = ((transform.position.x + x) / MeshGenerator.resolution + sampleIncrement) * noiseSettings[i].roughness;
-                    float noiseZ = ((transform.position.z + z) / MeshGenerator.resolution + sampleIncrement) * noiseSettings[i].roughness;
-                    sample += Mathf.PerlinNoise(noiseX, noiseZ) * noiseSettings[i].frequancy;
-                    sampleIncrement += incrementRate;
-                    incrementRate += noiseSettings[i].persistance;
+                    float noiseX = ((offset + transform.position.x + x) / MeshGenerator.resolution + sampleIncrement) * noiseSettings[i].roughness;
+                    float noiseZ = ((offset + transform.position.z + z) / MeshGenerator.resolution + sampleIncrement) * noiseSettings[i].roughness;
+                    switch(noiseSettings[i].type)
+                    {
+                        case NoiseSettings.NoiseType.Hilly:
+                            sample += Mathf.PerlinNoise(noiseX, noiseZ) * noiseSettings[i].frequancy;
+                            break;
+                        case NoiseSettings.NoiseType.Mountainous:
+                            sample += 1f - Mathf.Abs(Mathf.PerlinNoise(noiseX, noiseZ) * noiseSettings[i].frequancy);
+                            break;
+                    }
+                    sampleIncrement += amplitude;
+                    amplitude *= noiseSettings[i].persistance;
                 }
                 sample = Mathf.Max(0, sample - noiseSettings[i].minValue);
                 sample *= noiseSettings[i].strength;
