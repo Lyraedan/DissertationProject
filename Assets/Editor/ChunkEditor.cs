@@ -33,7 +33,7 @@ public class ChunkEditor : Editor
         EditorGUILayout.PropertyField(noiseSettings);
         if (EditorGUI.EndChangeCheck())
         {
-            chunk.GenerateChunk();
+            chunk.UpdateChunk();
         }
         if (chunk.generator != null)
         {

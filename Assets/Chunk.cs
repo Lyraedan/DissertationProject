@@ -40,6 +40,18 @@ public class Chunk : MonoBehaviour
         generator.Refresh();
     }
 
+    public void UpdateChunk()
+    {
+        ApplyNoise();
+        Erode();
+        ApplyFoliage();
+        for (int i = 0; i < resolution * resolution; i++)
+        {
+            generator.RecalculateNormalAt(i);
+        }
+        generator.Refresh();
+    }
+
     public void ApplyNoise()
     {
         // Generate the heightmap
