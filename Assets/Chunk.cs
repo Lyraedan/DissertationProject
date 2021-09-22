@@ -7,8 +7,10 @@ public class Chunk : MonoBehaviour
 {
 
     public MeshGenerator generator;
-    public float perlinMultiplier;
-    public float heightMultiplier;
+    public float perlinMultiplier = 1f;
+    public float heightMultiplier = 1f;
+    public float noiseLayers = 1;
+    public float amplitude = 0.5f;
 
     public Texture2D noiseTexture;
     private Color[] pixels;
@@ -31,7 +33,7 @@ public class Chunk : MonoBehaviour
     public void GenerateChunk()
     {
         generator.GeneratePlane(transform.position.x, transform.position.z);
-        ApplyNoise(1);
+        ApplyNoise();
         Erode();
         ApplyFoliage();
         for(int i = 0; i < resolution * resolution; i++)
@@ -41,7 +43,7 @@ public class Chunk : MonoBehaviour
         generator.Refresh();
     }
 
-    public void ApplyNoise(int layers)
+    public void ApplyNoise()
     {
         // Generate the heightmap
         for (int z = 0; z < resolution; z++)
@@ -75,9 +77,18 @@ public class Chunk : MonoBehaviour
 
     float CalculateHeight(float x, float z)
     {
-        float noiseX = ((transform.position.x + x) / MeshGenerator.resolution) * perlinMultiplier;
-        float noiseZ = ((transform.position.z + z) / MeshGenerator.resolution) * perlinMultiplier;
-        float sample = Mathf.PerlinNoise(noiseX, noiseZ) * heightMultiplier;
+        float sample = 0;
+
+        float incrementRate = 0;
+        float sampleIncrement = 0;
+        for(int i = 0; i < noiseLayers; i++)
+        {
+            float noiseX = ((transform.position.x + x) / MeshGenerator.resolution + sampleIncrement) * perlinMultiplier;
+            float noiseZ = ((transform.position.z + z) / MeshGenerator.resolution + sampleIncrement) * perlinMultiplier;
+            sample += Mathf.PerlinNoise(noiseX, noiseZ) * heightMultiplier;
+            sampleIncrement += incrementRate;
+            incrementRate += amplitude;
+        }
 
         float noise = sample;
         return noise;

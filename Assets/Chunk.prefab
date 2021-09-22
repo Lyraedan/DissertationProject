@@ -47,6 +47,8 @@ MonoBehaviour:
   generator: {fileID: 0}
   perlinMultiplier: 6
   heightMultiplier: 8
+  noiseLayers: 1
+  amplitude: 0.5
   noiseTexture: {fileID: 0}
 --- !u!114 &3805699330748211315
 MonoBehaviour:
