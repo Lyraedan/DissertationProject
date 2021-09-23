@@ -118,7 +118,7 @@ public class Chunk : MonoBehaviour
                             sample += 1f - Mathf.Abs(Mathf.Sin(Mathf.PerlinNoise(noiseX, noiseZ))) * noiseSettings[i].frequancy;
                             break;
                         case NoiseSettings.NoiseType.Simplex:
-                            sample += SimplexNoise.SimplexNoise.Generate(noiseX, noiseZ);
+                            sample += SimplexNoise.SimplexNoise.Generate(noiseX, noiseZ) * noiseSettings[i].frequancy;
                             break;
                         default:
                             // Default algorithm is perlin

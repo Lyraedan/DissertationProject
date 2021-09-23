@@ -47,11 +47,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   generator: {fileID: 0}
   noiseSettings:
-  - noiseType: 1
+  - noiseType: 2
     enabled: 1
     interations: 1
-    strength: 13.1
-    roughness: 2.86
+    strength: 1.24
+    roughness: 1.05
     frequancy: 5.59
     persistance: 0.2
     minValue: -0.84
