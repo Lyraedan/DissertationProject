@@ -35,7 +35,7 @@ public class ChunkEditor : Editor
         {
             if (chunk.generator != null)
             {
-                chunk.UpdateChunk();
+                //chunk.UpdateChunk();
             }
         }
         EditorGUILayout.Vector3Field("Worldspace", chunk.worldSpace);

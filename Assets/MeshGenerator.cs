@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,7 +8,8 @@ public class MeshGenerator : MonoBehaviour
     /// <summary>
     /// Ranges for best "fast" results (32 -> 100)
     /// </summary>
-    public static int resolution = 100; // anything above 100 is fucked why
+    public static Vector2Int resolution = new Vector2Int(256, 256); // anything above 100 is fucked why
+    public static int VERTEX_LIMIT = 65535;
     public static float tileSize = 1.0f;
 
     public ColorSettings colorSettings;
@@ -54,11 +56,21 @@ public class MeshGenerator : MonoBehaviour
 
     public void GeneratePlane(float xOff, float zOff)
     {
+        //if(resolution.x * resolution.y > VERTEX_LIMIT)
+        //{
+        //    throw new OverflowException($"Required vertex count {resolution.x * resolution.y} can not exceed limit of {VERTEX_LIMIT}");
+        //}
+
         int index = 0;
-        for (int z = 0; z < resolution; z++)
+        for (int z = 0; z < resolution.y - 1; z++)
         {
-            for (int x = 0; x < resolution; x++)
+            for (int x = 0; x < resolution.x - 1; x++)
             {
+                if (((resolution.x * resolution.y) / 4) > VERTEX_LIMIT)
+                {
+                    throw new OverflowException($"Vertex count{(vertices.Count)} can not exceed limit of {VERTEX_LIMIT}");
+                }
+
                 // Generate vertices
                 Vector3 topLeft = new Vector3(xOff + x, 0, zOff + z);
                 Vector3 topRight = new Vector3((xOff + x) + tileSize, 0, zOff + z);

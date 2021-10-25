@@ -14,18 +14,12 @@ public class Chunk : MonoBehaviour
     public Texture2D noiseTexture;
     private Color[] pixels;
 
-    public int resolution {
-        get {
-            return MeshGenerator.resolution;
-        }
-    }
-
     public void Initialize()
     {
         generator = GetComponent<MeshGenerator>();
         generator.Initialize();
 
-        noiseTexture = new Texture2D(MeshGenerator.resolution, MeshGenerator.resolution);
+        noiseTexture = new Texture2D(MeshGenerator.resolution.x, MeshGenerator.resolution.y);
         pixels = new Color[noiseTexture.width * noiseTexture.height];
     }
 
@@ -35,10 +29,10 @@ public class Chunk : MonoBehaviour
         ApplyNoise();
         Erode();
         ApplyFoliage();
-        for(int i = 0; i < resolution * resolution; i++)
-        {
-            generator.RecalculateNormalAt(i);
-        }
+        //for(int i = 0; i < resolution * resolution; i++)
+        //{
+        //    generator.RecalculateNormalAt(i);
+        //}
         GenerateColours();
         generator.Refresh();
     }
@@ -48,10 +42,10 @@ public class Chunk : MonoBehaviour
         ApplyNoise();
         Erode();
         ApplyFoliage();
-        for (int i = 0; i < resolution * resolution; i++)
-        {
-            generator.RecalculateNormalAt(i);
-        }
+        //for (int i = 0; i < resolution * resolution; i++)
+        //{
+        //    generator.RecalculateNormalAt(i);
+        //}
         GenerateColours();
         generator.Refresh();
     }
@@ -59,9 +53,9 @@ public class Chunk : MonoBehaviour
     public void ApplyNoise()
     {
         // Generate the heightmap
-        for (int z = 0; z < resolution; z++)
+        for (int z = 0; z < MeshGenerator.resolution.y; z++)
         {
-            for(int x = 0; x < resolution; x++)
+            for(int x = 0; x < MeshGenerator.resolution.x; x++)
             {
                 float noise = CalculateHeight(x, z);
                 float noise2 = CalculateHeight(x + 1, z);
@@ -70,7 +64,7 @@ public class Chunk : MonoBehaviour
 
                 float avg = noise + noise2 + noise3 + noise4 / 4;
 
-                int pixelIndex = (int)z * MeshGenerator.resolution + (int)x;
+                int pixelIndex = (int)z * MeshGenerator.resolution.x + (int)x;
                 pixels[pixelIndex] = new Color(avg, avg, avg);
                 //generator.colorSettings.material.SetVector("_heights", new Vector4(noise, noise2, noise3, noise4));
                 generator.UpdateHeights(pixelIndex, new float[] { noise, noise2, noise3, noise4 });
@@ -98,8 +92,8 @@ public class Chunk : MonoBehaviour
         float amplitude = 0;
         float sampleIncrement = 0;
 
-        float chunkX = (worldSpace.x + worldSpace.x) + MeshGenerator.resolution;
-        float chunkZ = (worldSpace.z + worldSpace.z) + MeshGenerator.resolution;
+        float chunkX = (worldSpace.x + worldSpace.x) + MeshGenerator.resolution.x;
+        float chunkZ = (worldSpace.z + worldSpace.z) + MeshGenerator.resolution.y;
 
         for (int i = 0; i < noiseSettings.Length; i++)
         {
@@ -107,8 +101,8 @@ public class Chunk : MonoBehaviour
             {
                 for (int j = 0; j < noiseSettings[i].interations; j++)
                 {
-                    float noiseX = (offset + chunkX + x) * noiseSettings[i].roughness / MeshGenerator.resolution;
-                    float noiseZ = (offset + chunkZ + + z) * noiseSettings[i].roughness / MeshGenerator.resolution;
+                    float noiseX = (offset + chunkX + x) * noiseSettings[i].roughness / MeshGenerator.resolution.x;
+                    float noiseZ = (offset + chunkZ + + z) * noiseSettings[i].roughness / MeshGenerator.resolution.y;
                     switch(noiseSettings[i].noiseType)
                     {
                         case NoiseSettings.NoiseType.Perlin:

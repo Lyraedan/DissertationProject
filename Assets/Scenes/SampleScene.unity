@@ -381,6 +381,9 @@ MonoBehaviour:
   cam: {fileID: 963194227}
   isInfinite: 1
   displayChunkDetails: 0
+  minMax:
+    Max: -3.4028235e+38
+    Min: 3.4028235e+38
 --- !u!4 &2011233288
 Transform:
   m_ObjectHideFlags: 0

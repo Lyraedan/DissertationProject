@@ -84,7 +84,7 @@ public class WorldGenerator : MonoBehaviour
             {
                 if(!ChunkExistsAt(x, z))
                 {
-                    SpawnChunk(x * MeshGenerator.resolution / 2, z * MeshGenerator.resolution / 2);
+                    SpawnChunk(x * MeshGenerator.resolution.x / 2, z * MeshGenerator.resolution.y / 2);
                 }
             }
         }
@@ -97,12 +97,12 @@ public class WorldGenerator : MonoBehaviour
 
     float ChunkX()
     {
-        return Mathf.Round(cam.transform.position.x / MeshGenerator.resolution);
+        return Mathf.Round(cam.transform.position.x / MeshGenerator.resolution.x);
     }
 
     float ChunkZ()
     {
-        return Mathf.Round(cam.transform.position.z / MeshGenerator.resolution);
+        return Mathf.Round(cam.transform.position.z / MeshGenerator.resolution.y);
     }
 
     private void OnDrawGizmos()
