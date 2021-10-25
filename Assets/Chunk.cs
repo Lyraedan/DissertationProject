@@ -13,7 +13,6 @@ public class Chunk : MonoBehaviour
 
     public Texture2D noiseTexture;
     private Color[] pixels;
-    private MinMax minMax;
 
     public int resolution {
         get {
@@ -23,7 +22,6 @@ public class Chunk : MonoBehaviour
 
     public void Initialize()
     {
-        minMax = new MinMax();
         generator = GetComponent<MeshGenerator>();
         generator.Initialize();
 
@@ -134,7 +132,7 @@ public class Chunk : MonoBehaviour
                 sample *= noiseSettings[i].strength;
             }
         }
-        minMax.AddValue(sample);
+        WorldGenerator.instance.minMax.AddValue(sample);
         return sample;
     }
 
@@ -146,7 +144,7 @@ public class Chunk : MonoBehaviour
 
     void UpdateMinMax()
     {
-        generator.colorSettings.material.SetVector("_minMax", new Vector4(minMax.Min, minMax.Max));
+        generator.colorSettings.material.SetVector("_minMax", new Vector4(WorldGenerator.instance.minMax.Min, WorldGenerator.instance.minMax.Max));
     }
 
     void UpdateColors()

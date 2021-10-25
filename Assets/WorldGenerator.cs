@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class WorldGenerator : MonoBehaviour
 {
+    public static WorldGenerator instance;
+
     public float viewSize = 1f;
     public GameObject chunkPrefab;
     public Camera cam;
@@ -15,10 +17,21 @@ public class WorldGenerator : MonoBehaviour
     [Header("Editor")]
     public bool displayChunkDetails = false;
 
+    public MinMax minMax;
+
+    private void Awake()
+    {
+        if (instance == null)
+            instance = this;
+        else
+            Destroy(this);
+    }
+
     // Start is called before the first frame update
     void Start()
     {
-        if(!isInfinite)
+        minMax = new MinMax();
+        if (!isInfinite)
             SpawnChunk(0, 0);
         else
             GenerateChunkIfWeNeedTo();
