@@ -7,7 +7,7 @@ public class MeshGenerator : MonoBehaviour
     /// <summary>
     /// Ranges for best "fast" results (32 -> 100)
     /// </summary>
-    public static int resolution = 100; // anything above 100 is fucked why
+    public static int resolution = 100; // if mesh index format is 16 bit there is a maximum of 65535 verts (255 x 255) - 256 x 256 is 1 over
     public static float tileSize = 1.0f;
 
     public ColorSettings colorSettings;
@@ -37,6 +37,7 @@ public class MeshGenerator : MonoBehaviour
         meshCollider = gameObject.AddComponent<MeshCollider>();
 
         mesh = new Mesh();
+        //mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32; // enable for more vertices
 
         if(colorSettings.texture == null)
         {
