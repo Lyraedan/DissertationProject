@@ -38,6 +38,7 @@ public class ChunkEditor : Editor
                 chunk.UpdateChunk();
             }
         }
+        EditorGUILayout.Vector3Field("Worldspace", chunk.worldSpace);
 
         serializedObject.ApplyModifiedProperties();
     }

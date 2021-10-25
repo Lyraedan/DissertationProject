@@ -47,10 +47,12 @@ public class WorldGenerator : MonoBehaviour
         if (ChunkExistsAt(x, z))
             return;
 
-        GameObject spawned = Instantiate(chunkPrefab, new Vector3(x, 0, z), Quaternion.identity);
+        Vector3 worldspace = new Vector3(x, 0, z);
+        GameObject spawned = Instantiate(chunkPrefab, worldspace, Quaternion.identity);
         spawned.transform.SetParent(transform);
         spawned.name = $"{x}_{z}";
         Chunk chunk = spawned.GetComponent<Chunk>();
+        chunk.worldSpace = worldspace;
         chunk.Initialize();
         chunk.GenerateChunk();
         chunks.Add($"{x}_{z}", spawned);

@@ -9,6 +9,8 @@ public class Chunk : MonoBehaviour
     public MeshGenerator generator;
     public NoiseSettings[] noiseSettings = new NoiseSettings[1];
 
+    public Vector3 worldSpace = Vector3.zero;
+
     public Texture2D noiseTexture;
     private Color[] pixels;
     private MinMax minMax;
@@ -98,8 +100,11 @@ public class Chunk : MonoBehaviour
         float amplitude = 0;
         float sampleIncrement = 0;
 
-        float chunkX = transform.position.x * MeshGenerator.resolution;
-        float chunkZ = transform.position.z * MeshGenerator.resolution;
+        //float chunkX = transform.position.x * MeshGenerator.resolution;
+        //float chunkZ = transform.position.z * MeshGenerator.resolution;
+
+        float chunkX = (worldSpace.x + worldSpace.x) + MeshGenerator.resolution;
+        float chunkZ = (worldSpace.z + worldSpace.z) + MeshGenerator.resolution;
 
         for (int i = 0; i < noiseSettings.Length; i++)
         {
@@ -107,8 +112,8 @@ public class Chunk : MonoBehaviour
             {
                 for (int j = 0; j < noiseSettings[i].interations; j++)
                 {
-                    float noiseX = ((offset + chunkX + x) * noiseSettings[i].roughness) / MeshGenerator.resolution;
-                    float noiseZ = ((offset + chunkZ + z) * noiseSettings[i].roughness) / MeshGenerator.resolution;
+                    float noiseX = (offset + chunkX + x) * noiseSettings[i].roughness / MeshGenerator.resolution;
+                    float noiseZ = (offset + chunkZ + + z) * noiseSettings[i].roughness / MeshGenerator.resolution;
                     switch(noiseSettings[i].noiseType)
                     {
                         case NoiseSettings.NoiseType.Perlin:
