@@ -132,7 +132,7 @@ public class Chunk : MonoBehaviour
                 sample *= noiseSettings[i].strength;
             }
         }
-        WorldGenerator.instance.minMax.AddValue(sample);
+        //WorldGenerator.instance.minMax.AddValue(sample);
         return sample;
     }
 

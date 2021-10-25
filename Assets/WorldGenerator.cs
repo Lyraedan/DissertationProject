@@ -31,6 +31,8 @@ public class WorldGenerator : MonoBehaviour
     void Start()
     {
         minMax = new MinMax();
+        minMax.AddValue(0);
+        minMax.AddValue(15);
         if (!isInfinite)
             SpawnChunk(0, 0);
         else

@@ -7,7 +7,7 @@ public class MeshGenerator : MonoBehaviour
     /// <summary>
     /// Ranges for best "fast" results (32 -> 100)
     /// </summary>
-    public static int resolution = 100;
+    public static int resolution = 100; // anything above 100 is fucked why
     public static float tileSize = 1.0f;
 
     public ColorSettings colorSettings;
