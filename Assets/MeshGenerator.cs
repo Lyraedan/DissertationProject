@@ -7,7 +7,7 @@ public class MeshGenerator : MonoBehaviour
     /// <summary>
     /// Ranges for best "fast" results (32 -> 100)
     /// </summary>
-    public static int resolution = 100; // if mesh index format is 16 bit there is a maximum of 65535 verts (255 x 255) - 256 x 256 is 1 over
+    public static Vector2Int resolution = new Vector2Int(100, 100); // if mesh index format is 16 bit there is a maximum of 65535 verts (255 x 255) - 256 x 256 is 1 over
     public static float tileSize = 1.0f;
 
     public ColorSettings colorSettings;
@@ -56,9 +56,9 @@ public class MeshGenerator : MonoBehaviour
     public void GeneratePlane(float xOff, float zOff)
     {
         int index = 0;
-        for (int z = 0; z < resolution; z++)
+        for (int z = 0; z < resolution.y; z++)
         {
-            for (int x = 0; x < resolution; x++)
+            for (int x = 0; x < resolution.x; x++)
             {
                 // Generate vertices
                 Vector3 topLeft = new Vector3(xOff + x, 0, zOff + z);
