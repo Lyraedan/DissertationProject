@@ -98,4 +98,4 @@ Material:
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
     - _heightColor: {r: 0, g: 0, b: 0.020015717, a: 0.19857979}
     - _heights: {r: 0, g: 0, b: 0, a: 0}
-    - _minMax: {r: 0, g: 15.474285, b: 0, a: 0}
+    - _minMax: {r: 0, g: 21.81311, b: 0, a: 0}

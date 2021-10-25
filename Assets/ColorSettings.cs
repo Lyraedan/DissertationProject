@@ -6,11 +6,13 @@ public class ColorSettings : MonoBehaviour
 {
     public int textureResolution = 50;
     public Texture2D texture;
+    public Material baseMaterial;
     public Material material;
     public Gradient gradient;
 
     private void OnValidate()
     {
+#if UNITY_EDITOR
         if(Application.isEditor)
         {
             if (UnityEditor.Selection.activeTransform == null)
@@ -23,5 +25,6 @@ public class ColorSettings : MonoBehaviour
                 chunk.GenerateColours();
             }
         }
+#endif
     }
 }

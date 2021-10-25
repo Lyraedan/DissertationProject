@@ -32,7 +32,6 @@ public class MeshGenerator : MonoBehaviour
     {
         colorSettings = gameObject.GetComponent<ColorSettings>();
         meshRenderer = gameObject.AddComponent<MeshRenderer>();
-        meshRenderer.sharedMaterial = colorSettings.material;
 
         meshFilter = gameObject.AddComponent<MeshFilter>();
         meshCollider = gameObject.AddComponent<MeshCollider>();
@@ -42,7 +41,9 @@ public class MeshGenerator : MonoBehaviour
         if(colorSettings.texture == null)
         {
             colorSettings.texture = new Texture2D(colorSettings.textureResolution, 1);
+            colorSettings.material = new Material(colorSettings.baseMaterial);
         }
+        meshRenderer.sharedMaterial = colorSettings.material;
     }
 
     private void OnValidate()
@@ -191,6 +192,7 @@ public class MeshGenerator : MonoBehaviour
 
     private void OnDrawGizmos()
     {
+#if UNITY_EDITOR
         if (Application.isEditor)
         {
             if (generated)
@@ -212,5 +214,6 @@ public class MeshGenerator : MonoBehaviour
                 }
             }
         }
+#endif
     }
 }

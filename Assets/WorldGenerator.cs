@@ -92,6 +92,7 @@ public class WorldGenerator : MonoBehaviour
 
     private void OnDrawGizmos()
     {
+#if UNITY_EDITOR
         if (Application.isEditor)
         {
             for (int i = 0; i < chunks.Count; i++)
@@ -100,5 +101,6 @@ public class WorldGenerator : MonoBehaviour
                     UnityEditor.Handles.Label(chunks.ElementAt(i).Value.transform.position, "(" + chunks.ElementAt(i).Value.transform.position.x + ", " + chunks.ElementAt(i).Value.transform.position.z + " : " + i + ")");
             }
         }
+#endif
     }
 }

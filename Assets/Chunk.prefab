@@ -71,6 +71,7 @@ MonoBehaviour:
     frequancy: 9.4
     persistance: 0.7
     minValue: 18.61
+  worldSpace: {x: 0, y: 0, z: 0}
   noiseTexture: {fileID: 0}
 --- !u!114 &3805699330748211315
 MonoBehaviour:
@@ -106,7 +107,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   textureResolution: 50
   texture: {fileID: 0}
-  material: {fileID: 2100000, guid: bb0fd3a119655ee4fbb41e0a4d06fbea, type: 2}
+  baseMaterial: {fileID: 2100000, guid: bb0fd3a119655ee4fbb41e0a4d06fbea, type: 2}
+  material: {fileID: 0}
   gradient:
     serializedVersion: 2
     key0: {r: 0.107634984, g: 0.0085439505, b: 0.6037736, a: 1}

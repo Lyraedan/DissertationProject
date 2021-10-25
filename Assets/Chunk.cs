@@ -100,9 +100,6 @@ public class Chunk : MonoBehaviour
         float amplitude = 0;
         float sampleIncrement = 0;
 
-        //float chunkX = transform.position.x * MeshGenerator.resolution;
-        //float chunkZ = transform.position.z * MeshGenerator.resolution;
-
         float chunkX = (worldSpace.x + worldSpace.x) + MeshGenerator.resolution;
         float chunkZ = (worldSpace.z + worldSpace.z) + MeshGenerator.resolution;
 
