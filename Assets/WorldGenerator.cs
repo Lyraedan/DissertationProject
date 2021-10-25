@@ -90,10 +90,13 @@ public class WorldGenerator : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        for(int i = 0; i < chunks.Count; i++)
+        if (Application.isEditor)
         {
-            if (displayChunkDetails)
-                UnityEditor.Handles.Label(chunks.ElementAt(i).Value.transform.position, "(" + chunks.ElementAt(i).Value.transform.position.x + ", " + chunks.ElementAt(i).Value.transform.position.z + " : " + i + ")");
+            for (int i = 0; i < chunks.Count; i++)
+            {
+                if (displayChunkDetails)
+                    UnityEditor.Handles.Label(chunks.ElementAt(i).Value.transform.position, "(" + chunks.ElementAt(i).Value.transform.position.x + ", " + chunks.ElementAt(i).Value.transform.position.z + " : " + i + ")");
+            }
         }
     }
 }

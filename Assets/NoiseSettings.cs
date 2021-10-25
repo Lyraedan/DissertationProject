@@ -7,7 +7,7 @@ public class NoiseSettings
 {
     public enum NoiseType
     {
-        Perlin, Perlin_Abs, Simplex, Fractal, Coherent, Diamond_Square
+        Perlin, Perlin_Abs, Simplex
     }
 
     public NoiseType noiseType = NoiseType.Perlin;

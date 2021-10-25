@@ -197,14 +197,18 @@ public class MeshGenerator : MonoBehaviour
             {
                 for (int i = 0; i < vertices.Count - 1; i++)
                 {
-                    if(showVerticeValues)
-                        UnityEditor.Handles.Label(vertices[i], "(" + vertices[i].x + ", " + vertices[i].z + " : " + i + ")\nHeight: " + (GetAverage(i / 4)));
-
-                    if (showGrid)
+                    if (showVerticeValues)
                     {
-                        Gizmos.color = Color.black;
-                        Gizmos.DrawLine(vertices[i], vertices[i + 1]);
+                        if (Vector3.Distance(UnityEditor.SceneView.currentDrawingSceneView.camera.transform.position, transform.position + vertices[i]) < 5f)
+                        {
+                            UnityEditor.Handles.Label(transform.position + vertices[i], "(" + vertices[i].x + ", " + vertices[i].z + " : " + i + ")\nHeight: " + (GetAverage(i / 4)));
+                        }
                     }
+                }
+                if (showGrid)
+                {
+                    Gizmos.color = Color.black;
+                    Gizmos.DrawWireMesh(mesh, transform.position, Quaternion.identity, Vector3.one);
                 }
             }
         }
