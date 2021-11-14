@@ -75,9 +75,35 @@ public class Chunk : MonoBehaviour
         noiseTexture.Apply();
     }
 
+    // ref https://web.mit.edu/cesium/Public/terrain.pdf
     public void Erode()
     {
+        /*
+        int chunkInterationCount = 1;
+        float delta = 0;
+        for(int z = 0; z < MeshGenerator.resolution.y; z++)
+        {
+            for(int x = 0; x < MeshGenerator.resolution.x; x++)
+            {
+                for(int i = 0; i < chunkInterationCount; i++)
+                {
+                    float tl = CalculateHeight(x, z);
+                    float tr = CalculateHeight(x + 1, z);
+                    float bl = CalculateHeight(x, z + 1);
+                    float br = CalculateHeight(x + 1, z + 1);
 
+                    var t = delta *= Time.deltaTime;
+                    tl -= t;
+                    tr -= t;
+                    bl -= t;
+                    br -= t;
+                    int pixelIndex = (int)z * MeshGenerator.resolution.x + (int)x;
+
+                    generator.UpdateHeights(pixelIndex, new float[] { tl, tr, bl, br });
+                }
+            }
+        }
+        */
     }
 
     public void ApplyFoliage()
@@ -89,8 +115,7 @@ public class Chunk : MonoBehaviour
     {
         float sample = 0;
         float offset = 5000.0f;
-        float amplitude = 0;
-        float sampleIncrement = 0;
+        float amplitude = 1;
 
         float chunkX = (worldSpace.x + worldSpace.x) + MeshGenerator.resolution.x;
         float chunkZ = (worldSpace.z + worldSpace.z) + MeshGenerator.resolution.y;
@@ -99,6 +124,7 @@ public class Chunk : MonoBehaviour
         {
             if (noiseSettings[i].enabled)
             {
+                float frequancy = noiseSettings[i].scale;
                 for (int j = 0; j < noiseSettings[i].interations; j++)
                 {
                     float noiseX = (offset + chunkX + x) * noiseSettings[i].roughness / MeshGenerator.resolution.x;
@@ -106,21 +132,24 @@ public class Chunk : MonoBehaviour
                     switch(noiseSettings[i].noiseType)
                     {
                         case NoiseSettings.NoiseType.Perlin:
-                            sample += Mathf.PerlinNoise(noiseX, noiseZ) * noiseSettings[i].frequancy;
+                            sample += Mathf.PerlinNoise(noiseX, noiseZ) * frequancy;
                             break;
                         case NoiseSettings.NoiseType.Perlin_Abs:
-                            sample += 1f - Mathf.Abs(Mathf.Sin(Mathf.PerlinNoise(noiseX, noiseZ))) * noiseSettings[i].frequancy;
+                            sample += 1f - Mathf.Abs(Mathf.Sin(Mathf.PerlinNoise(noiseX, noiseZ))) * frequancy;
                             break;
                         case NoiseSettings.NoiseType.Simplex:
-                            sample += SimplexNoise.SimplexNoise.Generate(noiseX, noiseZ) * noiseSettings[i].frequancy;
+                            sample += SimplexNoise.SimplexNoise.Generate(noiseX, noiseZ) * frequancy;
+                            break;
+                        case NoiseSettings.NoiseType.Fractal:
+                            sample += ((SimplexNoise.SimplexNoise.Generate(noiseX, noiseZ) * frequancy) * 2 - 1) * amplitude;
                             break;
                         default:
                             // Default algorithm is perlin
-                            sample += Mathf.PerlinNoise(noiseX, noiseZ) * noiseSettings[i].frequancy;
+                            sample += Mathf.PerlinNoise(noiseX, noiseZ) * frequancy;
                             break;
                     }
-                    sampleIncrement += amplitude;
                     amplitude *= noiseSettings[i].persistance;
+                    frequancy *= noiseSettings[i].lacuarity;
                 }
                 sample = Mathf.Max(0, sample - noiseSettings[i].minValue);
                 sample *= noiseSettings[i].strength;
