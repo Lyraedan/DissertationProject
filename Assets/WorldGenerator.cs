@@ -12,6 +12,8 @@ public class WorldGenerator : MonoBehaviour
     public Camera cam;
     public bool isInfinite = false;
 
+    public int seed = 0;
+
     public Dictionary<string, GameObject> chunks = new Dictionary<string, GameObject>();
 
     [Header("Editor")]
@@ -30,6 +32,10 @@ public class WorldGenerator : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        if(seed == 0)
+        {
+            seed = Random.Range(0, 10000);
+        }
         minMax = new MinMax();
         minMax.AddValue(0);
         minMax.AddValue(15);

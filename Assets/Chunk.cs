@@ -76,6 +76,7 @@ public class Chunk : MonoBehaviour
     }
 
     // ref https://web.mit.edu/cesium/Public/terrain.pdf
+    //https://www.idi.ntnu.no/emner/tdt03/Presentations2013/Kazakauskas_hydraulic_erosion.pdf
     public void Erode()
     {
         /*
@@ -108,7 +109,7 @@ public class Chunk : MonoBehaviour
 
     public void ApplyFoliage()
     {
-
+        // Spawn trees, grass, rocks etc
     }
 
     float CalculateHeight(float x, float z)
@@ -127,8 +128,8 @@ public class Chunk : MonoBehaviour
                 float frequancy = noiseSettings[i].scale;
                 for (int j = 0; j < noiseSettings[i].interations; j++)
                 {
-                    float noiseX = (offset + chunkX + x) * noiseSettings[i].roughness / MeshGenerator.resolution.x;
-                    float noiseZ = (offset + chunkZ + + z) * noiseSettings[i].roughness / MeshGenerator.resolution.y;
+                    float noiseX = WorldGenerator.instance.seed + (offset + chunkX + x) * noiseSettings[i].roughness / MeshGenerator.resolution.x;
+                    float noiseZ = WorldGenerator.instance.seed + (offset + chunkZ + z) * noiseSettings[i].roughness / MeshGenerator.resolution.y;
                     switch(noiseSettings[i].noiseType)
                     {
                         case NoiseSettings.NoiseType.Perlin:
