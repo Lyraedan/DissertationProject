@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &3805699330748211317
+--- !u!1 &1142140480493153763
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,24 +8,24 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 3805699330748211316}
-  - component: {fileID: 3805699330748211314}
-  - component: {fileID: 3805699330748211315}
-  - component: {fileID: 4311781772117509047}
+  - component: {fileID: 1142140480493153762}
+  - component: {fileID: 1142140480493153764}
+  - component: {fileID: 1142140480493153765}
+  - component: {fileID: 62975055692467745}
   m_Layer: 0
-  m_Name: Chunk
+  m_Name: ChunkBackup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &3805699330748211316
+--- !u!4 &1142140480493153762
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3805699330748211317}
+  m_GameObject: {fileID: 1142140480493153763}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -33,13 +33,13 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3805699330748211314
+--- !u!114 &1142140480493153764
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3805699330748211317}
+  m_GameObject: {fileID: 1142140480493153763}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 93c8508400bf5b5488d36fe9a2b11d3a, type: 3}
@@ -76,19 +76,19 @@ MonoBehaviour:
     minValue: -2
   worldSpace: {x: 0, y: 0, z: 0}
   noiseTexture: {fileID: 0}
-  speed: 3
+  enableErosion: 1
   numberOfIterations: 100
-  iterationScale: 0.5
-  depositionRate: 1
-  erosionRate: 1
-  friction: 1
---- !u!114 &3805699330748211315
+  gravity: 4
+  lifetime: 30
+  inertia: 0.05
+  sedimentCapacityMultiplier: 4
+--- !u!114 &1142140480493153765
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3805699330748211317}
+  m_GameObject: {fileID: 1142140480493153763}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a2b4d1bcd7d880b4d907c98fdc6d72a3, type: 3}
@@ -102,13 +102,13 @@ MonoBehaviour:
   meshRenderer: {fileID: 0}
   showGrid: 0
   showVerticeValues: 0
---- !u!114 &4311781772117509047
+--- !u!114 &62975055692467745
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3805699330748211317}
+  m_GameObject: {fileID: 1142140480493153763}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6b09a8848c0b58049b140ca83e21bbd9, type: 3}

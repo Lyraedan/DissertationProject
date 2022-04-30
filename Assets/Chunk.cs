@@ -2,17 +2,25 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class Chunk : MonoBehaviour
 {
-
     public MeshGenerator generator;
     public NoiseSettings[] noiseSettings = new NoiseSettings[1];
 
-    public Vector3 worldSpace = Vector3.zero;
+    [HideInInspector] public Vector3 worldSpace = Vector3.zero;
 
-    public Texture2D noiseTexture;
+    [HideInInspector] public Texture2D noiseTexture;
     private Color[] pixels;
+
+    [Header("Erosion")]
+    public float speed = 3f;
+    public int numberOfIterations = 100;
+    public float iterationScale = 0.5f;
+    public float depositionRate = 1f;
+    public float erosionRate = 1f;
+    public float friction = 1f;
 
     public void Initialize()
     {
@@ -27,7 +35,7 @@ public class Chunk : MonoBehaviour
     {
         generator.GeneratePlane(transform.position.x, transform.position.z);
         ApplyNoise();
-        Erode();
+        //Erode();
         ApplyFoliage();
         //for(int i = 0; i < resolution * resolution; i++)
         //{
@@ -40,7 +48,7 @@ public class Chunk : MonoBehaviour
     public void UpdateChunk()
     {
         ApplyNoise();
-        Erode();
+        //Erode();
         ApplyFoliage();
         //for (int i = 0; i < resolution * resolution; i++)
         //{
@@ -50,12 +58,18 @@ public class Chunk : MonoBehaviour
         generator.Refresh();
     }
 
+    public void Refresh()
+    {
+        GenerateColours();
+        generator.Refresh();
+    }
+
     public void ApplyNoise()
     {
         // Generate the heightmap
         for (int z = 0; z < MeshGenerator.resolution.y; z++)
         {
-            for(int x = 0; x < MeshGenerator.resolution.x; x++)
+            for (int x = 0; x < MeshGenerator.resolution.x; x++)
             {
                 float noise = CalculateHeight(x, z);
                 float noise2 = CalculateHeight(x + 1, z);
@@ -77,39 +91,54 @@ public class Chunk : MonoBehaviour
 
     // ref https://web.mit.edu/cesium/Public/terrain.pdf
     //https://www.idi.ntnu.no/emner/tdt03/Presentations2013/Kazakauskas_hydraulic_erosion.pdf
-    public void Erode()
+    // Based: https://jobtalle.com/simulating_hydraulic_erosion.html
+    public void Erode(float x, float z)
     {
-        /*
-        int chunkInterationCount = 1;
-        float delta = 0;
-        for(int z = 0; z < MeshGenerator.resolution.y; z++)
+        Debug.Log("Eroding");
+        float sediment = 0; // The amount of carried sediment
+
+        float xp = x; // Previous X
+        float zp = z; // Previous Z
+
+        float vx = 0; // Velocity X
+        float vz = 0; // Velocity Z
+
+        for(int i = 0; i < numberOfIterations; i++)
         {
-            for(int x = 0; x < MeshGenerator.resolution.x; x++)
-            {
-                for(int i = 0; i < chunkInterationCount; i++)
-                {
-                    float tl = CalculateHeight(x, z);
-                    float tr = CalculateHeight(x + 1, z);
-                    float bl = CalculateHeight(x, z + 1);
-                    float br = CalculateHeight(x + 1, z + 1);
+            // Get the surface normal at the current position - Sample function needs work
+            var surfaceNormal = generator.GetNormalAt(x, z);
+            // The surface is flat if the y normal is 1
+            if (surfaceNormal.y == 1)
+                break;
 
-                    var t = delta *= Time.deltaTime;
-                    tl -= t;
-                    tr -= t;
-                    bl -= t;
-                    br -= t;
-                    int pixelIndex = (int)z * MeshGenerator.resolution.x + (int)x;
+            // Calculate the deposition and erosion rates
+            float deposit = sediment * depositionRate * surfaceNormal.y;
+            float erosion = erosionRate * (1 - surfaceNormal.y) * Mathf.Min(1, i * iterationScale);
 
-                    generator.UpdateHeights(pixelIndex, new float[] { tl, tr, bl, br });
-                }
-            }
+            // Change the sediment on the place
+            generator.UpdateHeightAt(xp, zp, deposit - erosion);
+            sediment += erosion - deposit;
+
+            // Update velocity, previous position, current position
+            vx += friction * vx + surfaceNormal.x * speed;
+            vz += friction * vz + surfaceNormal.z * speed;
+            xp = x;
+            zp = z;
+            x += vx;
+            z += vz;
         }
-        */
     }
 
     public void ApplyFoliage()
     {
         // Spawn trees, grass, rocks etc
+    }
+
+    Vector2 CalculateGradient(float x, float z, float tr, float tl, float br, float bl)
+    {
+        float gx = (tr - tl) * (1 - z) + (br - bl) * z;
+        float gy = (bl - tl) * (1 - x) + (br - tr) * x;
+        return new Vector2(gx, gy);
     }
 
     float CalculateHeight(float x, float z)
@@ -130,7 +159,7 @@ public class Chunk : MonoBehaviour
                 {
                     float noiseX = WorldGenerator.instance.seed + (offset + chunkX + x) * noiseSettings[i].roughness / MeshGenerator.resolution.x;
                     float noiseZ = WorldGenerator.instance.seed + (offset + chunkZ + z) * noiseSettings[i].roughness / MeshGenerator.resolution.y;
-                    switch(noiseSettings[i].noiseType)
+                    switch (noiseSettings[i].noiseType)
                     {
                         case NoiseSettings.NoiseType.Perlin:
                             sample += Mathf.PerlinNoise(noiseX, noiseZ) * frequancy;
@@ -174,7 +203,8 @@ public class Chunk : MonoBehaviour
     void UpdateColors()
     {
         Color[] colors = new Color[generator.colorSettings.textureResolution];
-        for (int i = 0; i < generator.colorSettings.textureResolution; i++) {
+        for (int i = 0; i < generator.colorSettings.textureResolution; i++)
+        {
             colors[i] = generator.colorSettings.gradient.Evaluate(i / (generator.colorSettings.textureResolution - 1f));
         }
         generator.colorSettings.texture.SetPixels(colors);

@@ -380,7 +380,7 @@ MonoBehaviour:
     type: 3}
   cam: {fileID: 963194227}
   isInfinite: 0
-  seed: 260715
+  seed: 8770
   displayChunkDetails: 0
   minMax:
     Max: -3.4028235e+38

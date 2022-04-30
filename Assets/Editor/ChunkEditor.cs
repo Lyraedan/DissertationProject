@@ -8,10 +8,24 @@ using UnityEngine;
 public class ChunkEditor : Editor
 {
     SerializedProperty noiseSettings;
+    SerializedProperty speed;
+    SerializedProperty numberOfIterations;
+    SerializedProperty iterationScale;
+    SerializedProperty depositionRate;
+    SerializedProperty erosionRate;
+    SerializedProperty friction;
+
+    int droplets = 1000;
 
     private void OnEnable()
     {
         noiseSettings = serializedObject.FindProperty("noiseSettings");
+        speed = serializedObject.FindProperty("speed");
+        numberOfIterations = serializedObject.FindProperty("numberOfIterations");
+        iterationScale = serializedObject.FindProperty("iterationScale");
+        depositionRate = serializedObject.FindProperty("depositionRate");
+        erosionRate = serializedObject.FindProperty("erosionRate");
+        friction = serializedObject.FindProperty("friction");
     }
 
     public override void OnInspectorGUI()
@@ -35,10 +49,31 @@ public class ChunkEditor : Editor
         {
             if (chunk.generator != null)
             {
+                Debug.Log("Update!");
                 chunk.UpdateChunk();
             }
         }
         EditorGUILayout.Vector3Field("Worldspace", chunk.worldSpace);
+        GUILayout.Space(10);
+        GUILayout.Label("Erosion");
+        droplets = EditorGUILayout.IntField("Droplets", droplets);
+        EditorGUILayout.PropertyField(speed);
+        EditorGUILayout.PropertyField(numberOfIterations);
+        EditorGUILayout.PropertyField(iterationScale);
+        EditorGUILayout.PropertyField(depositionRate);
+        EditorGUILayout.PropertyField(erosionRate);
+        EditorGUILayout.PropertyField(friction);
+        bool erode = GUILayout.Button("Erode");
+        if(erode)
+        {
+            for (int i = 0; i < droplets; i++)
+            {
+                chunk.Erode(Random.Range(0, MeshGenerator.resolution.x),
+                            Random.Range(0, MeshGenerator.resolution.y));
+            }
+            chunk.Refresh();
+        }
+        //DrawDefaultInspector();
 
         serializedObject.ApplyModifiedProperties();
     }

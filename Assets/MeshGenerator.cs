@@ -1,13 +1,21 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class MeshGenerator : MonoBehaviour
 {
     /// <summary>
-    /// Ranges for best "fast" results (32 -> 100)
+    /// Ranges for best "fast" results (32 -> 128)
     /// </summary>
-    public static Vector2Int resolution = new Vector2Int(100,100); // if mesh index format is 16 bit there is a maximum of 65535 verts (255 x 255) - 256 x 256 is 1 over
+    public static Vector2Int resolution = new Vector2Int(128, 128); // if mesh index format is 16 bit there is a maximum of 65535 verts (255 x 255) - 256 x 256 is 1 over
+    public static int vertexCount
+    {
+        get
+        {
+            return Mathf.RoundToInt(resolution.x * resolution.y) * 4;
+        }
+    }
     public static float tileSize = 1.0f;
 
     public ColorSettings colorSettings;
@@ -108,6 +116,8 @@ public class MeshGenerator : MonoBehaviour
         mesh.RecalculateNormals();
         mesh.RecalculateTangents();
 
+        normals = mesh.normals.ToList();
+
         meshFilter.mesh = mesh;
         meshCollider.sharedMesh = mesh;
         generated = true;
@@ -123,6 +133,8 @@ public class MeshGenerator : MonoBehaviour
         mesh.RecalculateBounds();
         mesh.RecalculateNormals();
         mesh.RecalculateTangents();
+
+        normals = mesh.normals.ToList();
 
         meshFilter.mesh = mesh;
         meshCollider.sharedMesh = mesh;
@@ -160,6 +172,26 @@ public class MeshGenerator : MonoBehaviour
         normals[index + 1] = normalA;
         normals[index + 2] = normalA;
         normals[index + 3] = normalB;
+    }
+
+    public int GetIndex(float x, float z)
+    {
+        return (int) ((z * resolution.x) + x) * 4;
+    }
+
+    public Vector3 GetNormalAt(float x, float z)
+    {
+        int index = GetIndex(x, z);
+        Debug.Log("Normal index: " + index + " \\ " + normals.Count);
+        return normals[index];
+    }
+
+    public void UpdateHeightAt(float x, float z, float value)
+    {
+        int index = GetIndex(x, z);
+        Vector3 vertex = vertices[index];
+        vertex.y = value;
+        vertices[index] = vertex;
     }
 
     public void UpdateHeights(int tile, float[] heights)
