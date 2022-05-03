@@ -13,11 +13,16 @@ public class MathUtils : MonoBehaviour
                           Mathf.Pow(dest.z - src.z, 2));
     }
 
-    public static long nanoTime()
+    public static long NanoTime()
     {
         long nano = 10000L * Stopwatch.GetTimestamp();
         nano /= TimeSpan.TicksPerMillisecond;
         nano *= 100L;
         return nano;
+    }
+
+    public static float Interpolate(float a0, float a1, float w)
+    {
+        return (a1 - a0) * w + a0;
     }
 }

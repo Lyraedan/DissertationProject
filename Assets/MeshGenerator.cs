@@ -179,10 +179,21 @@ public class MeshGenerator : MonoBehaviour
         return (int) ((z * resolution.x) + x) * 4;
     }
 
+    public Vector3 GetNormalAt(int index)
+    {
+        return normals[index];
+    }
+
+    public void UpdateHeightAt(int index, float value)
+    {
+        Vector3 vertex = vertices[index];
+        vertex.y = value;
+        vertices[index] = vertex;
+    }
+
     public Vector3 GetNormalAt(float x, float z)
     {
         int index = GetIndex(x, z);
-        Debug.Log("Normal index: " + index + " \\ " + normals.Count);
         return normals[index];
     }
 

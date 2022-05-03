@@ -1,7 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 [CustomEditor(typeof(Chunk))]
 [CanEditMultipleObjects]
@@ -66,13 +68,23 @@ public class ChunkEditor : Editor
         bool erode = GUILayout.Button("Erode");
         if(erode)
         {
+            DateTime before = DateTime.Now;
             for (int i = 0; i < droplets; i++)
             {
                 chunk.Erode(Random.Range(0, MeshGenerator.resolution.x),
                             Random.Range(0, MeshGenerator.resolution.y));
             }
             chunk.Refresh();
+            DateTime after = DateTime.Now;
+            TimeSpan duration = after.Subtract(before);
+            Debug.Log($"Eroded in {duration.Milliseconds}ms");
         }
+        bool reset = GUILayout.Button("Undo erosion");
+        if(reset)
+        {
+            chunk.UpdateChunk();
+        }
+
         //DrawDefaultInspector();
 
         serializedObject.ApplyModifiedProperties();

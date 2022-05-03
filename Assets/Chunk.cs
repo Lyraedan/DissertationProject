@@ -33,6 +33,7 @@ public class Chunk : MonoBehaviour
 
     public void GenerateChunk()
     {
+        DateTime before = DateTime.Now;
         generator.GeneratePlane(transform.position.x, transform.position.z);
         ApplyNoise();
         //Erode();
@@ -43,6 +44,9 @@ public class Chunk : MonoBehaviour
         //}
         GenerateColours();
         generator.Refresh();
+        DateTime after = DateTime.Now;
+        TimeSpan duration = after.Subtract(before);
+        Debug.Log($"Generated in {duration.Milliseconds}ms");
     }
 
     public void UpdateChunk()
@@ -105,6 +109,15 @@ public class Chunk : MonoBehaviour
 
         for(int i = 0; i < numberOfIterations; i++)
         {
+            // Erosion goes past the bounds of the chunk
+            if (x < 0 || z < 0 || x >= MeshGenerator.resolution.x - 1 || z >= MeshGenerator.resolution.y - 1)
+                break;
+
+            float tl = CalculateHeight(xp, zp);
+            float tr = CalculateHeight(xp + 1, zp);
+            float bl = CalculateHeight(xp, zp + 1);
+            float br = CalculateHeight(xp + 1, zp + 1);
+
             // Get the surface normal at the current position - Sample function needs work
             var surfaceNormal = generator.GetNormalAt(x, z);
             // The surface is flat if the y normal is 1
@@ -115,8 +128,16 @@ public class Chunk : MonoBehaviour
             float deposit = sediment * depositionRate * surfaceNormal.y;
             float erosion = erosionRate * (1 - surfaceNormal.y) * Mathf.Min(1, i * iterationScale);
 
+            float atl = Mathf.Clamp(tl - (deposit - erosion), WorldGenerator.instance.minMax.Min, WorldGenerator.instance.minMax.Max);
+            float atr = Mathf.Clamp(tr - (deposit - erosion), WorldGenerator.instance.minMax.Min, WorldGenerator.instance.minMax.Max);
+            float abl = Mathf.Clamp(bl - (deposit - erosion), WorldGenerator.instance.minMax.Min, WorldGenerator.instance.minMax.Max);
+            float abr = Mathf.Clamp(br - (deposit - erosion), WorldGenerator.instance.minMax.Min, WorldGenerator.instance.minMax.Max);
+
+            int tile = (int) ((zp * MeshGenerator.resolution.x) + xp);
+
             // Change the sediment on the place
-            generator.UpdateHeightAt(xp, zp, deposit - erosion);
+            //generator.UpdateHeightAt(xp, zp, adjustment);
+            generator.UpdateHeights(tile, new float[] { atl, atr, abl, abr });
             sediment += erosion - deposit;
 
             // Update velocity, previous position, current position
