@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -155,21 +156,14 @@ public class Chunk : MonoBehaviour
         // Spawn trees, grass, rocks etc
     }
 
-    Vector2 CalculateGradient(float x, float z, float tr, float tl, float br, float bl)
-    {
-        float gx = (tr - tl) * (1 - z) + (br - bl) * z;
-        float gy = (bl - tl) * (1 - x) + (br - tr) * x;
-        return new Vector2(gx, gy);
-    }
-
     float CalculateHeight(float x, float z)
     {
         float sample = 0;
         float offset = 5000.0f;
         float amplitude = 1;
 
-        float chunkX = (worldSpace.x + worldSpace.x) + MeshGenerator.resolution.x;
-        float chunkZ = (worldSpace.z + worldSpace.z) + MeshGenerator.resolution.y;
+        float chunkX = (worldSpace.x * 2) + MeshGenerator.resolution.x;
+        float chunkZ = (worldSpace.z * 2) + MeshGenerator.resolution.y;
 
         for (int i = 0; i < noiseSettings.Length; i++)
         {
@@ -186,21 +180,21 @@ public class Chunk : MonoBehaviour
                             sample += Mathf.PerlinNoise(noiseX, noiseZ) * frequancy;
                             break;
                         case NoiseSettings.NoiseType.Perlin_Abs:
-                            sample += 1f - Mathf.Abs(Mathf.Sin(Mathf.PerlinNoise(noiseX, noiseZ))) * frequancy;
+                            sample += 1f - Mathf.Abs(Mathf.Sin(Mathf.PerlinNoise(noiseX, noiseZ))) * frequancy * amplitude;
                             break;
                         case NoiseSettings.NoiseType.Simplex:
-                            sample += SimplexNoise.SimplexNoise.Generate(noiseX, noiseZ) * frequancy;
+                            sample += SimplexNoise.SimplexNoise.Generate(noiseX, noiseZ) * frequancy * amplitude;
                             break;
                         case NoiseSettings.NoiseType.Fractal:
                             sample += ((SimplexNoise.SimplexNoise.Generate(noiseX, noiseZ) * frequancy) * 2 - 1) * amplitude;
                             break;
                         default:
                             // Default algorithm is perlin
-                            sample += Mathf.PerlinNoise(noiseX, noiseZ) * frequancy;
+                            sample += Mathf.PerlinNoise(noiseX, noiseZ) * frequancy * amplitude;
                             break;
                     }
                     amplitude *= noiseSettings[i].persistance;
-                    frequancy *= noiseSettings[i].lacuarity;
+                    frequancy *= noiseSettings[i].lacunarity;
                 }
                 sample = Mathf.Max(0, sample - noiseSettings[i].minValue);
                 sample *= noiseSettings[i].strength;

@@ -17,6 +17,6 @@ public class NoiseSettings
     public float roughness = 1f;
     public float scale = 1f;
     public float persistance = 0.5f;
-    public float lacuarity = 1;
+    public float lacunarity = 1;
     public float minValue = 0f;
 }
